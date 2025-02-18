@@ -1,0 +1,1 @@
+console.log("Gold Rush v2.0.0");
