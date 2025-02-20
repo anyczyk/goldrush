@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="10006" id="com.goldrushredemption.goldrushredemption" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="10016" id="com.goldrushredemption.goldrushredemption" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Gold Rush Redemption</name>
     <description>Sample Apache Cordova App</description>
     <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
@@ -30,7 +30,7 @@
     <plugin name="cordova-plugin-x-socialsharing" spec="^6.0.3" />
     <plugin name="cordova-plugin-purchase" spec="^13.12.1" />
     <plugin name="admob-plus-cordova" spec="^1.28.0">
-        <variable name="APP_ID_ANDROID" value="ca-app-pub-4263972941440160~8672052735" />
+        <variable name="APP_ID_ANDROID" value="ca-app-pub-4263972941440160~6241099007" />
     </plugin>
     <plugin name="cordova-plugin-statusbar" spec="^2.4.3" />
     <plugin name="cordova-plugin-console" source="npm" spec="^1.1.0" />

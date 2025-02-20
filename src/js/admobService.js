@@ -2,7 +2,7 @@
 import { setCookiesMinutes, hasCookies } from './cookies';
 
 let interstitial = null;
-const idAd = 'ca-app-pub-4263972941440160/4876848772'; // real
+const idAd = 'ca-app-pub-4263972941440160/9932932002'; // real
 // const idAd = 'ca-app-pub-3940256099942544/1033173712'; // test
 const initializeAdMob = async () => {
     if(window.cordova) {

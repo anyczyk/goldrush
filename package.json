@@ -100,7 +100,7 @@
       "cordova-plugin-purchase": {},
       "cordova-plugin-console": {},
       "admob-plus-cordova": {
-        "APP_ID_ANDROID": "ca-app-pub-4263972941440160~8672052735",
+        "APP_ID_ANDROID": "ca-app-pub-4263972941440160~6241099007",
         "PLAY_SERVICES_VERSION": "20.6.0"
       }
     }

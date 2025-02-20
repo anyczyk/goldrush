@@ -1,43 +1,13 @@
 import '../scss/index.scss';
 import {setCookies, removeCookies, getCookies} from './cookies';
-import {detectionDevice, detectionWEBGL, isEven, inArrayObject, inArray, isExists, removeA, randomBetween, randomArray, triggerKeyboardEvent, debounce} from './functions';
+import {detectionDevice, detectionWEBGL, isEven, inArrayObject, isExists, randomBetween, randomArray} from './functions';
 import { showInterstitial } from './admobService';
-const versionGame = 'semDesign GRR v1.0.06 ';
+const versionGame = 'semDesign GRR v1.0.16 ';
 
 if(!detectionWEBGL()) {
     alert("Unfortunately, your system does not support webGL, this game may run very slowly. Try to update the system.");
 }
 
-
-// works
-// if(typeof Android === "object") {
-//     alert("This is the Java");
-// } else {
-//     alert("This is not the Java");
-// }
-
-// const fullScreenLoad = function () {
-//     if (!Element.prototype.requestFullscreen) {
-//         Element.prototype.requestFullscreen = Element.prototype.mozRequestFullscreen || Element.prototype.webkitRequestFullscreen || Element.prototype.msRequestFullscreen;
-//     }
-//     if (!document.exitFullscreen) {
-//         document.exitFullscreen = document.mozExitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
-//     }
-//     if (!document.fullscreenElement) {
-//         Object.defineProperty(document, 'fullscreenElement', {
-//             get: function() {
-//                 return document.mozFullScreenElement || document.msFullscreenElement || document.webkitFullscreenElement;
-//             }
-//         });
-//         Object.defineProperty(document, 'fullscreenEnabled', {
-//             get: function() {
-//                 return document.mozFullScreenEnabled || document.msFullscreenEnabled || document.webkitFullscreenEnabled;
-//             }
-//         });
-//     }
-// };
-// fullScreenLoad();
-// for IE11
 Number.isInteger = Number.isInteger || function(value) {
     return typeof value === "number" &&
         isFinite(value) &&
@@ -46,7 +16,7 @@ Number.isInteger = Number.isInteger || function(value) {
 
 const body = document.body;
 
-window.addEventListener('load', function(event) {
+window.addEventListener('load', function() {
     setTimeout(function () {
         body.classList.add('during');
     },2000);
@@ -112,22 +82,20 @@ let map,
 
 const preload = () => {
 
-    game.load.tilemap('level1', 'levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
-
-    // example full options:
+    // game.load.tilemap('level1', 'levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
+    //
     // proportiesMap[1] = {
-    //     background:"background1",
-    //     backgroundSecond:"background1_1",
-    //     backgroundColor:"#f3f5ff",
-    //     fog:"yellowFog",
-    //     fogStop: false,
-    //     fogPositionY:520,
-    //     fogSpeed:0.25,
-    //     positionGround:672,
-    //     parallax:true,
-    //     timeLimit: 120, // sec
-    //     bgAudio: 'bg1'
+    //     background: "background2",
+    //     fog: "whiteFog",
+    //     fogPositionY: 100,
+    //     fogSpeed: 0, //0.25,
+    //     positionGround: 200,
+    //     parallax: true,
+    //     //timeLimit: 200, // sec
+    //     bgAudio: 'bg-sound'
     // };
+
+    game.load.tilemap('level1', 'levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
 
     proportiesMap[1] = {
         background: "background4",
@@ -146,9 +114,9 @@ const preload = () => {
     game.load.tilemap('level2', 'levels/level2.json', null, Phaser.Tilemap.TILED_JSON);
     proportiesMap[2] = {
         background: "background4",
+        backgroundColor: "#def7c3",
         backgroundMoveX: 500,
         //backgroundSecond:"background1_1",
-        backgroundColor: "#f3f5ff",
         fog: "yellowFog",
         fogPositionY: 520,
         fogSpeed: 0, //0.25,
@@ -284,7 +252,7 @@ const preload = () => {
     game.load.image('boxTopMenu', 'images/top-menu-mini.png');
     game.load.image('background1', 'images/background1.png');
     game.load.image('background1_1', 'images/background1_1.png');
-    game.load.image('background2', 'images/background2_1.png');
+    game.load.image('background2', 'images/background2_2.png');
     game.load.image('background3', 'images/background3.png');
     game.load.image('background4', 'images/background4.jpg');
     game.load.image('background5', 'images/background5.jpg');
@@ -420,22 +388,10 @@ const preload = () => {
     game.load.audio('bg-sound', 'audio/background2.mp3'); // my
     game.load.audio('bg-sound-wind', 'audio/only-wind.mp3'); // my
     game.load.audio('bg-sound-music', 'audio/background.mp3'); // my
-
-    // console.log("load fullscreen");
-    // game.input.onTap.add(function(pointer, isDoubleClick) {
-    //     if(isDoubleClick) {
-    //         if(game.scale.isFullScreen){
-    //             game.scale.stopFullScreen();
-    //         } else {
-    //             game.scale.startFullScreen();
-    //         }
-    //
-    //     }
-    // });
 };
 
 // game options
-const toolsGame={
+const toolsGame= {
     resetGameCookies: function(type) {
         if(type==="all") {
             removeCookies("unlock-levels");
@@ -457,42 +413,6 @@ const toolsGame={
     bgSet:function(bgColor) {
         game.stage.backgroundColor = bgColor;
     },
-    // slider: {
-    //     bounds: false,
-    //     min: false,
-    //     slider: false,
-    //     show: function() { // toolsGame.slider.show();
-    //         //define the boundary of the handler
-    //         this.bounds= new Phaser.Rectangle(100,100,500,80);
-    //         const graphics = game.add.graphics(this.bounds.x, this.bounds.y);
-    //         graphics.beginFill(0x000077);
-    //         graphics.drawRect(0, 0, this.bounds.width, this.bounds.height);
-    //         graphics.fixedToCamera = true;
-    //
-    //
-    //         //add empty sprite for input detection
-    //         this.slider = game.add.sprite(100, 100,'bullet');
-    //         this.slider.fixedToCamera = true;
-    //         this.slider.scale.setTo(1);
-    //         this.slider.inputEnabled = true;
-    //         this.slider.input.enableDrag(false,false,false,255,this.bounds);
-    //         this.slider.input.allowVerticalDrag = false;
-    //         this.slider.events.onDragStop.add(function(){
-    //             const that = toolsGame.slider;
-    //             if(that.slider.x>(that.bounds.width/2)+that.bounds.x){
-    //                 that.min=((that.bounds.width+that.bounds.x-that.slider.x-that.slider.width)/(that.bounds.width+that.bounds.x-that.slider.width))*100;
-    //             }
-    //             if(that.slider.x<(that.bounds.width/2)+that.bounds.x){
-    //                 that.min=((that.bounds.width+that.bounds.x-that.slider.x)/(that.bounds.width))*100;
-    //             }
-    //             console.log(that.min);
-    //         }, game);
-    //         this.min=1;
-    //     },
-    //     hide: function () {
-    //
-    //     }
-    // },
     audio: {
         footStep: function (volume) { // toolsGame.audio.footStep();
             if(!this.a1) {
@@ -657,7 +577,7 @@ const toolsGame={
     },
     preloader: {
         //obj: true,
-        add: function(x,y,lastMap,percentLevel) {
+        add: function(x,y,lastMap) {
             //alert(theEndCredits);
 
             toolsGame.bgSet('#000000');
@@ -705,13 +625,6 @@ const toolsGame={
                             (toolsGame.windows.boxMenu.obj)?1.5*tileSize+moveY:1.5*tileSize+moveY,
                             'Life','Life1',1,1,.8,.8,8
                         );
-
-                        //
-                        // toolsGame.image.show(
-                        //     (toolsGame.windows.boxMenu.obj)?18*tileSize+moveX:33*tileSize+moveX,
-                        //     (toolsGame.windows.boxMenu.obj)?1.5*tileSize+moveY:1.75*tileSize+moveY,
-                        //     'lifes-single-bar','lifes-single-bar',1,1,.8,.8,1
-                        // );
 
                         toolsGame.image.show(
                             (toolsGame.windows.boxMenu.obj)?22*tileSize+moveX:37*tileSize+moveX,
@@ -767,12 +680,6 @@ const toolsGame={
                 show: function () { //  toolsGame.windows.boxTopMenu.let.show();
                     toolsGame.windows.boxTopMenu.positionBar();
 
-                    // toolsGame.text.show(false,
-                    //     (toolsGame.windows.boxMenu.obj)?19*tileSize+moveX:34*tileSize+moveX,
-                    //     (toolsGame.windows.boxMenu.obj)?1.5*tileSize+moveY:1.5*tileSize+moveY,
-                    //     1,('x ' + toolsGame.mainElements.player.numberLifes),'700 15px Arial' ,'#ded4b8',true,'number_Lifes_text',true
-                    // );
-
                     toolsGame.text.show(false,
                         (toolsGame.windows.boxMenu.obj)?19*tileSize+moveX:34*tileSize+moveX,
                         (toolsGame.windows.boxMenu.obj)?1.5*tileSize+moveY:1.5*tileSize+moveY,
@@ -818,22 +725,10 @@ const toolsGame={
                 } else {
                     this.obj.alpha = 0.8;
                 }
-
-                // game.physics.arcade.enable(this.obj);
-                //console.log(this.obj);
-                // game.add.tween(this.obj).to( { x: 200 }, 300, Phaser.Easing.Exponential.Out, true);
-                //console.log("x");
             },
             show:function(type){
-                //console.log(toolsGame.windows.boxMenu.obj);
-                //console.log(this.obj);
                 toolsGame.buttons.openBoxMenu.hide();
 
-                //boxMenu.
-                // if(this.obj) this.obj.destroy();
-                // this.obj=game.add.image(tileSize*2, tileSize*2, 'boxMenu');
-                // this.obj.alpha = 0.8;
-                // this.obj.fixedToCamera = true;
                 this.bg(type); // toolsGame.windows.boxMenu.bg();
 
                 toolsGame.buttons.end.show();
@@ -868,8 +763,6 @@ const toolsGame={
                     if(!window.cordova) { toolsGame.buttons.fullScreenBrowser.hide();}
                     toolsGame.animationImage.sentence1.hide();
                 }
-
-
 
                 //toolsGame.buttons.closeBoxMenu.show();
                 if(type === 'game-complete') {
@@ -993,25 +886,6 @@ const toolsGame={
                         }, this);
                     }, this);
                 }, this);
-
-
-                // setTimeout(function (that){
-                //     game.add.tween(that.obj4).to({alpha: 1}, 600, Phaser.Easing.Linear.None, true);
-                //     toolsGame.audio.footStep();
-                //     setTimeout(function (that){
-                //         game.add.tween(that.obj3).to({alpha: 1}, 600, Phaser.Easing.Linear.None, true);
-                //         toolsGame.audio.footStep();
-                //         setTimeout(function (that){
-                //             game.add.tween(that.obj2).to({alpha: 1}, 600, Phaser.Easing.Linear.None, true);
-                //             toolsGame.audio.footStep();
-                //             setTimeout(function (that){
-                //                 game.add.tween(that.obj).to({alpha: 1}, 600, Phaser.Easing.Linear.None, true);
-                //                 toolsGame.audio.footStep();
-                //                 toolsGame.audio.nextLevel();
-                //             },600,that);
-                //         },600,that);
-                //     },600,that);
-                // },timeShow, this);
             },
             hide:function(){
                 if(isExists(this.obj)) {
@@ -1073,10 +947,6 @@ const toolsGame={
         closeBoxMenu:{
             //obj:false,
             show:function(){
-                //buttonPauseMenu
-                //console.log(toolsGame.buttons.openBoxMenu);
-                //console.log(this);
-
                 if(isExists(this.obj)) this.obj.destroy();
                 this.obj = game.add.button(44*tileSize, 3*tileSize, 'buttonsIcons', function(){
                     toolsGame.audio.breakBones();
@@ -1138,7 +1008,7 @@ const toolsGame={
             show:function(){
                 //buttonQuit
                 if(isExists(this.obj)) this.obj.destroy();
-                this.obj = game.add.button(17*tileSize, 1*tileSize, 'buttonsWindowMenu', function(){
+                this.obj = game.add.button(17*tileSize, tileSize, 'buttonsWindowMenu', function(){
                     //alert("Quit game!");
                     //toolsGame.windows.boxMenu.show('quite');
                     toolsGame.audio.breakBones();
@@ -1217,7 +1087,6 @@ const toolsGame={
                     //alert(levelFile.activeIdLevel + " - " + unlockLevels + " - " + amountLevels);
                     if(levelFile.activeIdLevel<amountLevels) {
                         levelFile.name='level'+levelFile.activeIdLevel;
-                        levelFile.activeIdLevel=levelFile.activeIdLevel;
                     } else {
                         levelFile.name='level1';
                         levelFile.activeIdLevel=1;
@@ -1329,7 +1198,7 @@ const toolsGame={
                 if(!window.cordova) {
                     if (isExists(this.obj)) this.obj.destroy();
                     const x = (playGame.main) ? 19 * tileSize : 25 * tileSize,
-                        y = (playGame.main) ? 3 * tileSize : 1 * tileSize;
+                        y = (playGame.main) ? 3 * tileSize : tileSize;
                     this.obj = game.add.button(x, y, 'buttonsWindowMenu', function () {
                         toolsGame.audio.breakBones();
 
@@ -1458,12 +1327,7 @@ const toolsGame={
             }
         },
 
-
         navigations: {
-            //left:false,
-            //right:false,
-            //up:false,
-            //shot:false,
             show:function(){
                 if(isExists(this.left)) this.left.destroy();
                 this.left = game.add.button(-(tileSize/2),(game.height-(10*tileSize)), 'buttonNavigation', function(){}, this,0,0); //#
@@ -1498,7 +1362,7 @@ const toolsGame={
                 if(isExists(this.shot)) this.shot.destroy();
                 this.shot = game.add.button((game.width-(7*tileSize)),(game.height-(13*tileSize)), 'buttonNavigation', function(){}, this,3,3); //#
                 this.shot.alpha = toolsGame.mainElements.player.countBullets ? 0.6 : 0; // toolsGame.buttons.navigations.show.shot.alpha
-                this.shot.inputEnabled = toolsGame.mainElements.player.countBullets ? true : false;
+                this.shot.inputEnabled = !!toolsGame.mainElements.player.countBullets;
                 this.shot.fixedToCamera = true;
                 this.shot.onInputDown.add(function(){
                     fireButton.isDown = true;
@@ -1507,12 +1371,6 @@ const toolsGame={
                     }, this);
                     //triggerKeyboardEvent(window,17,"keydown");
                 });
-
-                // this doesn't work correct:
-                //this.shot.onInputUp.add(function(){
-                    //fireButton.isDown = false;
-                    //triggerKeyboardEvent(window,17,"keyup");
-                //});
 
                 if(isExists(this.up)) this.up.destroy();
                 this.up = game.add.button((game.width-(7*tileSize)),(game.height-(7*tileSize)), 'buttonNavigation', function(){}, this,2,2); //#
@@ -1667,11 +1525,6 @@ const toolsGame={
                 this.obj[idName].setShadow(1, -1, 'rgba(0,0,0,1)', 0);
             }
             if(typeText === 'add-point') {
-                //game.physics.arcade.enable([ this.obj[idName] ]);
-                //console.log(this.obj[idName]);
-                //this.obj[idName].enableBody = true;
-                //this.obj[idName].body.allowGravity = false;
-                //this.obj[idName].body.velocity.y=-50;
                 game.add.tween(this.obj[idName]).to({y: (y-48)}, 900, Phaser.Easing.Linear.None, true);
 
                 game.time.events.add(600,
@@ -1734,7 +1587,7 @@ const toolsGame={
     },
     createLeftObject: function(thatObj,x,y,name,type) {
         let height = game.cache.getImage(name).height;
-        if(type == "sprite") {
+        if(type === "sprite") {
             height = game.cache._cache.image[name].frameHeight;
         }
         return thatObj.create((x*tileSize), (y*tileSize)-(height-2*tileSize), name);
@@ -1765,29 +1618,16 @@ const toolsGame={
     mainElements: {
         player:{
             detectionHoldOnObject:function(o,numberAlgo) { // toolsGame.mainElements.player.detectionHoldOnObject()
-                //console.log("my:");
-                //console.log(this.obj.position.x-o.position.x);
-                //console.log("phaser:");
-                //console.log(game.physics.arcade.distanceBetween(toolsGame.mainElements.player.obj,o));
-
-                if(this.obj.position.x>o.position.x-game.width/numberAlgo &&
-                    this.obj.position.x<o.position.x+game.width/numberAlgo &&
-                    this.obj.position.y>o.position.y-game.height/numberAlgo &&
-                    this.obj.position.y<o.position.y+game.height/numberAlgo) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return this.obj.position.x > o.position.x - game.width / numberAlgo &&
+                    this.obj.position.x < o.position.x + game.width / numberAlgo &&
+                    this.obj.position.y > o.position.y - game.height / numberAlgo &&
+                    this.obj.position.y < o.position.y + game.height / numberAlgo;
             },
             detectionHoldOnTile:function(x,y,numberAlgo) { // toolsGame.mainElements.player.detectionHoldOnObject()
-                if(this.obj.position.x>x*tileSize-game.width/numberAlgo &&
-                    this.obj.position.x<x*tileSize+game.width/numberAlgo &&
-                    this.obj.position.y>y*tileSize-game.height/numberAlgo &&
-                    this.obj.position.y<y*tileSize+game.height/numberAlgo) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return this.obj.position.x > x * tileSize - game.width / numberAlgo &&
+                    this.obj.position.x < x * tileSize + game.width / numberAlgo &&
+                    this.obj.position.y > y * tileSize - game.height / numberAlgo &&
+                    this.obj.position.y < y * tileSize + game.height / numberAlgo;
             },
             countLifes:function(){ // toolsGame.mainElements.player.countLifes.f()
                 //\\//
@@ -1893,17 +1733,9 @@ const toolsGame={
                         }
                         if(toolsGame.mainElements.player.numberMainLifes === 0) {
                             toolsGame.mainElements.player.gameOver = true;
-                            // toolsGame.mainElements.player.obj.body.position.x=-10000;
-                            // toolsGame.mainElements.player.obj.body.position.y=-10000;
-                            // game over
-                            // setTimeout(function(){
-                            //     toolsGame.windows.boxMenu.show('game-over');
-                            //     toolsGame.mainElements.player.gameOver = false;
-                            // },600);
 
                             game.time.events.add(1500, function(){
                                 toolsGame.windows.boxMenu.show('game-over');
-                                //toolsGame.mainElements.player.gameOver = false;
                             }, this);
 
                         } else {
@@ -1915,15 +1747,6 @@ const toolsGame={
                                     facing = 'idle';
                                 }, this);
                             }, this);
-
-                            // setTimeout(function(){
-                            //     toolsGame.mainElements.player.numberLifes=amountLife;
-                            //     toolsGame.windows.boxTopMenu.f=false;
-                            //     setTimeout(function () {
-                            //         levelFile.blockedKeys = false;
-                            //         facing = 'idle';
-                            //     },1000);
-                            // },1200);
                         }
                     }
 
@@ -1935,24 +1758,12 @@ const toolsGame={
                         game.time.events.remove(player.fltTime);
                     }, this);
 
-                    // clearTimeout(player.timeoutKill);
-                    // player.timeoutKill = setTimeout(function () {
-                    // 	player.holdLostLife = false;
-                    // 	player.alpha = 1;
-                    // 	//if(levelFile.blockedKeys) player.alpha = 0;
-                    // 	clearInterval(player.fltTime);
-                    // }, 800);
-
                     // postac miga podczas kolizji z imtruzem/layerem z duzej wysokosci ubytek zycia
 
                     //game.time.events.loop
                     player.fltTime = game.time.events.loop(50,function () {
                         player.alpha = (player.alpha === 0.4) ?  1 : 0.4;
                     }, this);
-
-                    // player.fltTime = setInterval(function () {
-                    // 	player.alpha = (player.alpha === 0.4) ?  1 : 0.4;
-                    // },50);
                 }
                 toolsGame.windows.boxTopMenu.f=false;
             },
@@ -2020,11 +1831,6 @@ const toolsGame={
                 visualGun:function(player){ // toolsGame.mainElements.player.gun.visualGun()
                     if(this.obj)
                     {
-                        //console.log(player.obj.scale.y);
-                        // if(player.obj.scale.y===1.08 && player.obj.tint === 16776960) {
-                        //     this.obj.scale.y = 1.2;
-                        //     this.obj.tint =  16776960; //  * 0xFFFFFF; //200324
-                        // }
                         if(player.obj.scale.y === .8) {
                             this.obj.scale.y = .8;
                             this.obj.scale.x = .8;
@@ -2156,7 +1962,7 @@ const toolsGame={
             jumpTimer: 0, //toolsGame.mainElements.player.jumpTimer
             obj: false,
             add:function(x,y){ //add visual player
-                if(this.obj==false)
+                if(this.obj === false)
                 {
                     //toolsGame.mainElements.player.obj =  player
                     this.obj = game.add.sprite((x*tileSize), ((y*tileSize)-(4*tileSize)), 'dude');
@@ -2311,15 +2117,15 @@ const toolsGame={
                     if(destiny!=="total-kill")
                     {
                         if(intruz.type === 4) {
-                            if(intruz.randomMove=='intruzRight') {
+                            if(intruz.randomMove==='intruzRight') {
                                 intruz.frame = 38;
                             }
-                            else if(intruz.randomMove=='intruzLeft') {
+                            else if(intruz.randomMove==='intruzLeft') {
                                 intruz.frame = 39;
                             }
                         }
 
-                        if(intruz.randomMove=='intruzRight' || intruz.randomMove=='intruzLeft')
+                        if(intruz.randomMove==='intruzRight' || intruz.randomMove==='intruzLeft')
                         {
                             intruz.randomMove='intruzStop';
                             toolsGame.mainElements.player.obj.body.velocity.y = -playerJumpVelocityIntruder;
@@ -2367,15 +2173,6 @@ const toolsGame={
             collisionBack: function(i) {
                 if(!i.checkPosition) {
                     i.checkPosition = i.body.position.x;
-                    // setTimeout(function () {
-                    //     //console.log(i.checkPosition + " - " + i.body.position.x);
-                    //     if(Math.abs(i.checkPosition-i.body.position.x)<2) {
-                    //         //console.log("stoi w miejscu");
-                    //         if(i.randomMove === 'intruzRight') i.randomMove='intruzLeft';
-                    //         else i.randomMove='intruzRight';
-                    //     }
-                    //     i.checkPosition = false;
-                    // },600);
 
                     game.time.events.add(600, function(){
                         //console.log(i.checkPosition + " - " + i.body.position.x);
@@ -2392,7 +2189,6 @@ const toolsGame={
         },
         coins:{
             add: function(x,y) {
-                //toolsGame.mainElements.coins.obj = coins
                 const coin = this.obj.create(x*tileSize, y*tileSize, 'coin');
                 coin.animations.add('run',[0,1,2,3,4,5,6,7,8,8,7,6,5,4,3,2,1,0]);
                 coin.animations.play('run', 18, true);
@@ -2665,20 +2461,6 @@ const toolsGame={
             }
         },
 
-        // insideHouses2: {
-        //     add: function(x,y, visible) {
-        //         this.insideHouse0 = toolsGame.createCenterObject(this.obj,x,y,"inside-house-2");
-        //         game.physics.enable(this.insideHouse0, Phaser.Physics.ARCADE);
-        //         this.insideHouse0.body.allowGravity = false;
-        //         //insideHouse0.visible =  visible;
-        //     },
-        //     hide: function (){
-        //         if(isExists(this.insideHouse0)) {
-        //             this.insideHouse0.destroy();
-        //         }
-        //     }
-        // },
-
         doorsHorizontal: {
             //obj: true,
             add: function(x,y, none) {
@@ -2861,15 +2643,6 @@ const toolsGame={
                 cave.body.allowGravity = false;
             }
         },
-        // fogSingleS:{
-        //     add: function(x,y) {
-        //         const f = toolsGame.createCenterObject(this.obj,x,y,'fog-single',"sprite");
-        //         f.animations.add('run');
-        //         f.animations.play('run', 9, true);
-        //         f.alpha = .65;
-        //         f.body.allowGravity = false;
-        //     }
-        // },
         fogSingleS:{
             add: function(x,y) {
                 const f = toolsGame.createCenterObject(this.obj,x,y,'fog-single',"sprite");
@@ -3111,7 +2884,7 @@ const toolsGame={
                         } else if(type === 'pionBottomBack') {
                             if(!player.back) player.body.velocity.y = 150;
                         }
-                        player.back = player.back?false:true;
+                        player.back = !player.back;
                         player.lock = false;
                     }, this);
                 }
@@ -3172,8 +2945,8 @@ const toolsGame={
         }
         if(jumpTimerIntruz!==0)
         {
-            if(intruz.randomMove=='intruzLeft') intruz.randomMove='intruzRight';
-            else if(intruz.randomMove=='intruzRight') intruz.randomMove='intruzLeft';
+            if(intruz.randomMove === 'intruzLeft') intruz.randomMove='intruzRight';
+            else if(intruz.randomMove === 'intruzRight') intruz.randomMove='intruzLeft';
         }
     },
     intruzCollisonNoBack: function (intruz) {  // toolsGame.intruzCollisonBack(intruz);
@@ -3191,7 +2964,7 @@ const toolsGame={
     }
 }
 
-const startGame = (type,lastMap,percentLevel) => {
+const startGame = (type,lastMap) => {
     levelFile.readyLoad=false;
     levelFile.blockedKeys=false;
 
@@ -3203,12 +2976,10 @@ const startGame = (type,lastMap,percentLevel) => {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     // wykrywanie otatniego levelu dla Credits
-    theEndCredits = false;
-    if(Object.keys(game.cache._cacheMap[7]).length === levelFile.activeIdLevel) {
-        theEndCredits = true;
-    }
 
-    toolsGame.preloader.add(13,14,lastMap,percentLevel);
+    theEndCredits = Object.keys(game.cache._cacheMap[7]).length === levelFile.activeIdLevel;
+
+    toolsGame.preloader.add(13,14,lastMap);
 
     //odmierzanie czasu co 1s
     timer = game.time.create(false);
@@ -3270,29 +3041,6 @@ const startGame = (type,lastMap,percentLevel) => {
         map = game.add.tilemap(levelFile.name);
         map.addTilesetImage('tiles-1');
         levelFile.blockedKeys=false;
-
-        //console.log(proportiesMap[levelFile.activeIdLevel]);
-
-
-        // map.setTileIndexCallback(9, function(objectCollision,mapElement){
-        // 	if(objectCollision.key=="dude")
-        // 	{
-        // 		//objectCollision.alpha=0.5; // to jest player
-        // 		//console.log(objectCollision.key);
-        // 		//console.log(map);
-        // 		//console.log(map + " | " + map.getTile(65, 75, layer, true).index);
-        // 	}
-        // }, this);
-
-        // ta funkcja dziala tak ze player calkowicie pozbawiany jest blkowania przy tej kolizji
-        // map.setTileIndexCallback([109,110,111,112], function(objectCollision,mapElement){
-        //     if(objectCollision.key==="dude")
-        //     {
-        //         console.log("test collision");
-        //     }
-        //     return false;
-        // }, this);
-
         map.setCollisionByExclusion(
             [102, 155, 205, 206, 207, 201, 202, 203,
                 301, 302, 303, 304, 305, 306,
@@ -3338,20 +3086,13 @@ const startGame = (type,lastMap,percentLevel) => {
             }
 
             levelFile.backgroundLevel=proportiesMap[levelFile.activeIdLevel].background;
-            // obrazek o rozmiarze 1600px specjalnie pod parallaxe...
-            //bg = game.add.sprite(0, credits?0:(game.height-game.cache.getImage(levelFile.backgroundLevel).height), levelFile.backgroundLevel);
-
-            //console.log(map.widthInPixels);
             if(proportiesMap[levelFile.activeIdLevel].backgroundRepeatX) {
                 bg = game.add.tileSprite(0, credits?0:(game.height-game.cache.getImage(levelFile.backgroundLevel).height), map.widthInPixels*2, game.cache.getImage(levelFile.backgroundLevel).height,  levelFile.backgroundLevel);
             }
             else {
                 bg = game.add.sprite(0, credits?0:(game.height-game.cache.getImage(levelFile.backgroundLevel).height), levelFile.backgroundLevel);
             }
-            //his.obj = game.add.tileSprite(tileSize*2, tileSize*2, 736, 377, 'boxMenu');
-            //bg.width=game.cache.getImage(levelFile.backgroundLevel).width; //100*tileSize;
-            //bg.height=game.cache.getImage(levelFile.backgroundLevel).height; //28.125*tileSize;
-            bg.fixedToCamera = credits?false:true;
+            bg.fixedToCamera = !credits;
 
             if(proportiesMap[levelFile.activeIdLevel].backgroundSecond) {
                 bg2 = game.add.sprite(0, (game.height-game.cache.getImage(proportiesMap[levelFile.activeIdLevel].backgroundSecond).height), proportiesMap[levelFile.activeIdLevel].backgroundSecond);
@@ -3360,14 +3101,7 @@ const startGame = (type,lastMap,percentLevel) => {
                 bg2.fixedToCamera = true;
             }
 
-            if(proportiesMap[levelFile.activeIdLevel].parallax)
-            {
-                levelFile.backgroundParallax=true;
-            }
-            else
-            {
-                levelFile.backgroundParallax=false;
-            }
+            levelFile.backgroundParallax = !!proportiesMap[levelFile.activeIdLevel].parallax;
 
         }
 
@@ -3390,27 +3124,13 @@ const startGame = (type,lastMap,percentLevel) => {
             ground = game.add.tileSprite(-(map.width*tileSize), (map.height*tileSize)-positionGround-1, ((2*map.width)*tileSize), map.height*tileSize, 'ground');
         }
 
-        //layer = map.createLayer('Tile Layer 1');
-        //console.log(map + " | " + map.getTile(65, 75, layer, true).index);
-        //  Un-comment this on to see the collision tiles
-        // layer.debug = true;
-        //layer.resizeWorld();
-
-        //console.log(game.world.width + "x" + game.world.height);
-
         game.physics.arcade.gravity.y = 750;
 
         cursors = game.input.keyboard.createCursorKeys();
         jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.UP);
         fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        //console.log(Phaser.Keyboard);
-
-
         //ustawianie obiektow wg indexow mapy
         //kolejnosc wyznacza z-index warstwy
-
-        // toolsGame.mainElements.fogSingleS.obj = game.add.group();
-        // toolsGame.mainElements.fogSingleS.obj.enableBody = true;
 
         layerDeep = map.createLayer('levels-deep');
         layerDeep.resizeWorld();
@@ -3427,9 +3147,6 @@ const startGame = (type,lastMap,percentLevel) => {
         toolsGame.mainElements.insideHouses0.obj = game.add.group();
         toolsGame.mainElements.insideHouses0.obj.enableBody = true;
 
-        // toolsGame.mainElements.insideHouses2.obj = game.add.group();
-        // toolsGame.mainElements.insideHouses2.obj.enableBody = true;
-
         toolsGame.mainElements.insideHouses1.obj = game.add.group();
         toolsGame.mainElements.insideHouses1.obj.enableBody = true;
 
@@ -3441,21 +3158,6 @@ const startGame = (type,lastMap,percentLevel) => {
 
         toolsGame.mainElements.blackboards.obj = game.add.group();
         toolsGame.mainElements.blackboards.obj.enableBody = true;
-
-        // toolsGame.mainElements.building1s.obj = game.add.group();
-        // toolsGame.mainElements.building1s.obj.enableBody = true;
-        //
-        // toolsGame.mainElements.building2s.obj = game.add.group();
-        // toolsGame.mainElements.building2s.obj.enableBody = true;
-        //
-        // toolsGame.mainElements.building3s.obj = game.add.group();
-        // toolsGame.mainElements.building3s.obj.enableBody = true;
-        //
-        // toolsGame.mainElements.building4s.obj = game.add.group();
-        // toolsGame.mainElements.building4s.obj.enableBody = true;
-        //
-        // toolsGame.mainElements.building5s.obj = game.add.group();
-        // toolsGame.mainElements.building5s.obj.enableBody = true;
 
         toolsGame.mainElements.mines.obj = game.add.group();
         toolsGame.mainElements.mines.obj.enableBody = true;
@@ -3575,98 +3277,89 @@ const startGame = (type,lastMap,percentLevel) => {
         for(let x=0; x < map.width; x++) {
             for (let y = 0; y < map.height; y++) {
 
-                if (map.getTile(x, y, layer, true).index == 51) {
-                    // toolsGame.mainElements.logs.add(x, y, 'surprise', 'log');
-                    // map.removeTile(x, y, layerObject);
-
+                if (map.getTile(x, y, layer, true).index === 51) {
                     map.removeTile(x, y, layer);
                     map.putTile(101,x,y,layer);
                 }
 
-                // //generate single fog
-                // if (map.getTile(x, y, layerObject, true).index === 62) {
-                //     toolsGame.mainElements.fogSingleS.add(x, y);
-                //     map.removeTile(x, y, layerObject);
-                // }
-
                 //generowanie jaskini
-                if (map.getTile(x, y, layerObject, true).index == 1) {
+                if (map.getTile(x, y, layerObject, true).index === 1) {
                     toolsGame.mainElements.caves.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
 
-                if (map.getTile(x, y, layerObject, true).index == 522) {
+                if (map.getTile(x, y, layerObject, true).index === 522) {
                     toolsGame.mainElements.trees.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
 
                 //generate balckboard SHERIFF
-                if (map.getTile(x, y, layerObject, true).index == 52) {
+                if (map.getTile(x, y, layerObject, true).index === 52) {
                     toolsGame.mainElements.blackboards.add(x, y, 'b-sheriff');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generate balckboard SALOON
-                if (map.getTile(x, y, layerObject, true).index == 53) {
+                if (map.getTile(x, y, layerObject, true).index === 53) {
                     toolsGame.mainElements.blackboards.add(x, y, 'b-saloon');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generate balckboard STORE
-                if (map.getTile(x, y, layerObject, true).index == 54) {
+                if (map.getTile(x, y, layerObject, true).index === 54) {
                     toolsGame.mainElements.blackboards.add(x, y, 'b-store');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie building1
-                if (map.getTile(x, y, layerObject, true).index == 2) {
+                if (map.getTile(x, y, layerObject, true).index === 2) {
                     toolsGame.mainElements.buildings.add(x, y, 'building1');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie building2
-                if (map.getTile(x, y, layerObject, true).index == 4) {
+                if (map.getTile(x, y, layerObject, true).index === 4) {
                     toolsGame.mainElements.buildings.add(x, y, 'building2');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie building3
-                if (map.getTile(x, y, layerObject, true).index == 7) {
+                if (map.getTile(x, y, layerObject, true).index === 7) {
                     toolsGame.mainElements.buildings.add(x, y, 'building3');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie building4
-                if (map.getTile(x, y, layerObject, true).index == 8) {
+                if (map.getTile(x, y, layerObject, true).index === 8) {
                     toolsGame.mainElements.buildings.add(x, y, 'building4');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie building5
-                if (map.getTile(x, y, layerObject, true).index == 5) {
+                if (map.getTile(x, y, layerObject, true).index === 5) {
                     toolsGame.mainElements.buildings.add(x, y, 'building5');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie building6
-                if (map.getTile(x, y, layerObject, true).index == 9) {
+                if (map.getTile(x, y, layerObject, true).index === 9) {
                     toolsGame.mainElements.buildings.add(x, y, 'building6');
                     map.removeTile(x, y, layerObject);
                 }
                 //generowanie building7
-                if (map.getTile(x, y, layerObject, true).index == 10) {
+                if (map.getTile(x, y, layerObject, true).index === 10) {
                     toolsGame.mainElements.buildings.add(x, y, 'building7');
                     map.removeTile(x, y, layerObject);
                 }
                 //generowanie building8
-                if (map.getTile(x, y, layerObject, true).index == 11) {
+                if (map.getTile(x, y, layerObject, true).index === 11) {
                     toolsGame.mainElements.buildings.add(x, y, 'building8');
                     map.removeTile(x, y, layerObject);
                 }
                 //generowanie building9
-                if (map.getTile(x, y, layerObject, true).index == 12) {
+                if (map.getTile(x, y, layerObject, true).index === 12) {
                     toolsGame.mainElements.buildings.add(x, y, 'building9');
                     map.removeTile(x, y, layerObject);
                 }
@@ -3674,105 +3367,105 @@ const startGame = (type,lastMap,percentLevel) => {
 
 
                 //generowanie mine
-                if (map.getTile(x, y, layerObject, true).index == 6) {
+                if (map.getTile(x, y, layerObject, true).index === 6) {
                     toolsGame.mainElements.mines.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie kaktusow
-                if (map.getTile(x, y, layerObject, true).index == 504) {
+                if (map.getTile(x, y, layerObject, true).index === 504) {
                     toolsGame.mainElements.cactusAnimateS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 // generowanie trawy z lewej
-                if (map.getTile(x, y, layerObject, true).index == 511) {
+                if (map.getTile(x, y, layerObject, true).index === 511) {
                     toolsGame.mainElements.grassLeft.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie trawy z prawej
-                if (map.getTile(x, y, layerObject, true).index == 512) {
+                if (map.getTile(x, y, layerObject, true).index === 512) {
                     toolsGame.mainElements.grassRight.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 // generowanie animowanej trawy z lewej
-                if (map.getTile(x, y, layerObject, true).index == 461) {
+                if (map.getTile(x, y, layerObject, true).index === 461) {
                     toolsGame.mainElements.grassAnim.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 // generowanie animowanej trawy z prawej
-                if (map.getTile(x, y, layerObject, true).index == 462) {
+                if (map.getTile(x, y, layerObject, true).index === 462) {
                     toolsGame.mainElements.grassAnim.add(x, y, 'right');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie klucza
-                if (map.getTile(x, y, layerObject, true).index == 515) {
+                if (map.getTile(x, y, layerObject, true).index === 515) {
                     toolsGame.mainElements.keys.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie drzwi pionowych
-                if (map.getTile(x, y, layerObject, true).index == 516) {
+                if (map.getTile(x, y, layerObject, true).index === 516) {
                     //console.log(x + "x" + y);
                     toolsGame.mainElements.doors.add(x, y, (map.getTile(x+1, y, layerObject, true).index === 466));
                     map.removeTile(x, y, layerObject);
                 }
                 //generowanie drzwi poziomych
-                if (map.getTile(x, y, layerObject, true).index == 466) {
-                    // if(map.getTile(x+1, y, layerObject, true).index == 516) {
+                if (map.getTile(x, y, layerObject, true).index === 466) {
+                    // if(map.getTile(x+1, y, layerObject, true).index === 516) {
                     //     console.log("jest");
                     // }
                     toolsGame.mainElements.doorsHorizontal.add(x, y, (map.getTile(x+1, y, layerObject, true).index === 516));
                     map.removeTile(x, y, layerObject);
                 }
                 //generowanie zamków/locks
-                if (map.getTile(x, y, layerObject, true).index == 517) //lewy
+                if (map.getTile(x, y, layerObject, true).index === 517) //lewy
                 {
                     toolsGame.mainElements.locks.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
-                if (map.getTile(x, y, layerObject, true).index == 467) //prawy
+                if (map.getTile(x, y, layerObject, true).index === 467) //prawy
                 {
                     toolsGame.mainElements.locks.add(x, y, true);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie ognia up BIG
-                if (map.getTile(x, y, layerObject, true).index == 111) {
+                if (map.getTile(x, y, layerObject, true).index === 111) {
                     toolsGame.mainElements.fire.fireUpS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie ognia up SMALL NORMAL
-                if (map.getTile(x, y, layerObject, true).index == 117) {
+                if (map.getTile(x, y, layerObject, true).index === 117) {
                     toolsGame.mainElements.fire.fireUpNormalS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie ognia down
-                if (map.getTile(x, y, layerObject, true).index == 110) {
+                if (map.getTile(x, y, layerObject, true).index === 110) {
                     toolsGame.mainElements.fire.fireDownS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie ognia left
-                if (map.getTile(x, y, layerObject, true).index == 109) {
+                if (map.getTile(x, y, layerObject, true).index === 109) {
                     toolsGame.mainElements.fire.fireLeftS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie ognia right
-                if (map.getTile(x, y, layerObject, true).index == 112) {
+                if (map.getTile(x, y, layerObject, true).index === 112) {
                     toolsGame.mainElements.fire.fireRightS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie windmillNewS.add();
-                if (map.getTile(x, y, layerObject, true).index == 3) {
+                if (map.getTile(x, y, layerObject, true).index === 3) {
                     toolsGame.mainElements.windmillNewS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
@@ -3829,41 +3522,41 @@ const startGame = (type,lastMap,percentLevel) => {
             for (let y = 0; y < map.height; y++) {
 
                 //generowanie zapisywania levelu
-                if (map.getTile(x, y, layerObject, true).index == 602) {
+                if (map.getTile(x, y, layerObject, true).index === 602) {
                     toolsGame.mainElements.saveLevelS.add(x, y,'->');
                     map.removeTile(x, y, layerObject);
                 }
-                if (map.getTile(x, y, layerObject, true).index == 603) {
+                if (map.getTile(x, y, layerObject, true).index === 603) {
                     toolsGame.mainElements.saveLevelS.add(x, y,'<-');
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie konca levelu
-                if (map.getTile(x, y, layerObject, true).index == 601) {
+                if (map.getTile(x, y, layerObject, true).index === 601) {
                     toolsGame.mainElements.endLevelS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 // generating Life main
-                if (map.getTile(x, y, layerObject, true).index == 510) {
+                if (map.getTile(x, y, layerObject, true).index === 510) {
                     toolsGame.mainElements.Lifes.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 // generating Life single
-                if (map.getTile(x, y, layerObject, true).index == 460) {
+                if (map.getTile(x, y, layerObject, true).index === 460) {
                     toolsGame.mainElements.LifeSingleS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie monet
-                if (map.getTile(x, y, layerObject, true).index == 502) {
+                if (map.getTile(x, y, layerObject, true).index === 502) {
                     toolsGame.mainElements.coins.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie animowanych klod
-                if (map.getTile(x, y, layerObject, true).index == 513) {
+                if (map.getTile(x, y, layerObject, true).index === 513) {
                     //toolsGame.mainElements.logs.add(x, y);
                     // zamiana objektu na tile - szybcie działa
                     map.removeTile(x, y, layerObject);
@@ -3871,7 +3564,7 @@ const startGame = (type,lastMap,percentLevel) => {
                 }
 
                 //generowanie animowanych stone
-                if (map.getTile(x, y, layerObject, true).index == 267) {
+                if (map.getTile(x, y, layerObject, true).index === 267) {
                     //toolsGame.mainElements.logs.add(x, y);
                     // zamiana objektu na tile - szybcie działa
                     map.removeTile(x, y, layerObject);
@@ -3879,13 +3572,13 @@ const startGame = (type,lastMap,percentLevel) => {
                 }
 
                 //generowanie niewidocznych animowanych blockow z kloda (wyskakuja kladka))
-                if (map.getTile(x, y, layerObject, true).index == 414) {
+                if (map.getTile(x, y, layerObject, true).index === 414) {
                     toolsGame.mainElements.invisibleLogs.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie animowanych klod ze zlotem
-                if (map.getTile(x, y, layerObject, true).index == 514) {
+                if (map.getTile(x, y, layerObject, true).index === 514) {
                     toolsGame.mainElements.logs.lengthBonusCoins++;
 
                     map.removeTile(x, y, layerObject);
@@ -3893,7 +3586,7 @@ const startGame = (type,lastMap,percentLevel) => {
                 }
 
                 //generowanie animowanych klod z niespodzianka
-                if (map.getTile(x, y, layerObject, true).index == 464) {
+                if (map.getTile(x, y, layerObject, true).index === 464) {
                     // toolsGame.mainElements.logs.add(x, y, 'surprise', 'log');
                     // map.removeTile(x, y, layerObject);
 
@@ -3902,7 +3595,7 @@ const startGame = (type,lastMap,percentLevel) => {
                 }
 
                 //generowanie animowanych stone ze zlotem
-                if (map.getTile(x, y, layerObject, true).index == 268) {
+                if (map.getTile(x, y, layerObject, true).index === 268) {
                     toolsGame.mainElements.logs.lengthBonusCoins++;
 
                     map.removeTile(x, y, layerObject);
@@ -3910,7 +3603,7 @@ const startGame = (type,lastMap,percentLevel) => {
                 }
 
                 //generowanie animowanych stone z niespodzianka
-                if (map.getTile(x, y, layerObject, true).index == 269) {
+                if (map.getTile(x, y, layerObject, true).index === 269) {
                     // toolsGame.mainElements.logs.add(x, y, 'surprise', 'log');
                     // map.removeTile(x, y, layerObject);
 
@@ -3919,13 +3612,13 @@ const startGame = (type,lastMap,percentLevel) => {
                 }
 
                 //generowanie stone big
-                if (map.getTile(x, y, layerObject, true).index == 13) {
+                if (map.getTile(x, y, layerObject, true).index === 13) {
                     toolsGame.mainElements.stoneBigS.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie stone big
-                if (map.getTile(x, y, layerObject, true).index == 14) {
+                if (map.getTile(x, y, layerObject, true).index === 14) {
                     let randomString = Math.random().toString(36).substring(7);
                     toolsGame.mainElements.insideHouses0.add(x, y,randomString);
                     //alert(randomString);
@@ -3935,44 +3628,44 @@ const startGame = (type,lastMap,percentLevel) => {
                 }
 
                 //generowanie nabojow
-                if (map.getTile(x, y, layerObject, true).index == 503) {
+                if (map.getTile(x, y, layerObject, true).index === 503) {
                     toolsGame.mainElements.bulletsGuns.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
 
                 //generowanie kladki poziomej
-                if (map.getTile(x, y, layerObject, true).index == 505) {
+                if (map.getTile(x, y, layerObject, true).index === 505) {
                     toolsGame.mainElements.kladki.poziom.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie kladki pionowej top back
-                if (map.getTile(x, y, layerObject, true).index == 506) {
+                if (map.getTile(x, y, layerObject, true).index === 506) {
                     toolsGame.mainElements.kladki.pionTopBack.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie kladki pionowej bottom back
-                if (map.getTile(x, y, layerObject, true).index == 509) {
+                if (map.getTile(x, y, layerObject, true).index === 509) {
                     toolsGame.mainElements.kladki.pionBottomBack.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie kladki pionowej top
-                if (map.getTile(x, y, layerObject, true).index == 507) {
+                if (map.getTile(x, y, layerObject, true).index === 507) {
                     toolsGame.mainElements.kladki.pionTop.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie kladki pionowej bottom
-                if (map.getTile(x, y, layerObject, true).index == 508) {
+                if (map.getTile(x, y, layerObject, true).index === 508) {
                     toolsGame.mainElements.kladki.pionBottom.add(x, y);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie playera!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                if (map.getTile(x, y, layerObject, true).index == 501) {
+                if (map.getTile(x, y, layerObject, true).index === 501) {
                     //player moze byc tylko jeden wiec tylko raz jest genrowany
                     toolsGame.mainElements.player.add(x, y);
                     toolsGame.mainElements.player.gun.playerGun(toolsGame.mainElements.player);
@@ -4011,74 +3704,74 @@ const startGame = (type,lastMap,percentLevel) => {
             {
 
                 //generowanie intruzow typ 1
-                if (map.getTile(x, y, layerObject, true).index == 551) {
+                if (map.getTile(x, y, layerObject, true).index === 551) {
                     toolsGame.mainElements.intruders.add(x, y, 1);
                     map.removeTile(x, y, layerObject);
                 }
                 //generowanie intruzow typ 2
-                if (map.getTile(x, y, layerObject, true).index == 553) {
+                if (map.getTile(x, y, layerObject, true).index === 553) {
                     toolsGame.mainElements.intruders.add(x, y, 2);
                     map.removeTile(x, y, layerObject);
                 }
                 //generowanie intruzow typ 3
-                if (map.getTile(x, y, layerObject, true).index == 554) {
+                if (map.getTile(x, y, layerObject, true).index === 554) {
                     toolsGame.mainElements.intruders.add(x, y, 3);
                     map.removeTile(x, y, layerObject);
                 }
                 //generowanie intruzow typ 4 snake
-                if (map.getTile(x, y, layerObject, true).index == 555) {
+                if (map.getTile(x, y, layerObject, true).index === 555) {
                     toolsGame.mainElements.intruders.add(x, y, 4);
                     map.removeTile(x, y, layerObject);
                 }
                 //generowanie intruzow typ 5 bird condor
-                if (map.getTile(x, y, layerObject, true).index == 556) {
+                if (map.getTile(x, y, layerObject, true).index === 556) {
                     toolsGame.mainElements.intruders.add(x, y, 5);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie intruzow typ 6 - main enemy
-                if (map.getTile(x, y, layerObject, true).index == 557) {
+                if (map.getTile(x, y, layerObject, true).index === 557) {
                     toolsGame.mainElements.intruders.add(x, y, 6);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie intruzow typ 7 bird owl
-                if (map.getTile(x, y, layerObject, true).index == 558) {
+                if (map.getTile(x, y, layerObject, true).index === 558) {
                     toolsGame.mainElements.intruders.add(x, y, 7);
                     map.removeTile(x, y, layerObject);
                 }
 
                 // generowanie ryb
-                if (map.getTile(x, y, layerObject, true).index==520)
+                if (map.getTile(x, y, layerObject, true).index === 520)
                 {
                     toolsGame.mainElements.firebs.add(x,y,randomBetween(1,6));
                     map.removeTile(x, y, layerObject);
                 }
 
                 // generowanie ognistej kuli
-                if (map.getTile(x, y, layerObject, true).index==521)
+                if (map.getTile(x, y, layerObject, true).index === 521)
                 {
                     toolsGame.mainElements.firebs.add(x,y,randomBetween(1,6),true);
                     map.removeTile(x, y, layerObject);
                 }
 
                 //generowanie wody
-                if (map.getTile(x, y, layerObject, true).index==518)
+                if (map.getTile(x, y, layerObject, true).index === 518)
                 {
                     toolsGame.mainElements.waters.add(x,y);
                     map.removeTile(x, y, layerObject);
                 }
-                if (map.getTile(x, y, layerObject, true).index==519)
+                if (map.getTile(x, y, layerObject, true).index === 519)
                 {
                     toolsGame.mainElements.waters.add(x,y,'water-red');
                     map.removeTile(x, y, layerObject);
                 }
-                if (map.getTile(x, y, layerObject, true).index===468)
+                if (map.getTile(x, y, layerObject, true).index === 468)
                 {
                     toolsGame.mainElements.waterStaticS.add(x,y,false,'left');
                     map.removeTile(x, y, layerObject);
                 }
-                if (map.getTile(x, y, layerObject, true).index===418)
+                if (map.getTile(x, y, layerObject, true).index === 418)
                 {
                     toolsGame.mainElements.waterStaticS.add(x,y,false,'center');
                     map.removeTile(x, y, layerObject);
@@ -4112,22 +3805,10 @@ const startGame = (type,lastMap,percentLevel) => {
 
 // n* else next time
 const create = () => {
-
-    // Disable clearing the canvas on each tick (usually not needed).
-    // sprwadzic czy tu potrzeba!!!
     game.clearBeforeRender = false;
-
-    //game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    //game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
-    //game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
-
-    //game.scale.windowConstraints.bottom = "visual";
-
-    //console.log("test-create");
     // ladowanie tla dla menu i domyslnego dla mapy gry
     unlockLevels=(parseInt(getCookies("unlock-levels"))>1)?getCookies("unlock-levels"):1;
     toolsGame.bgSet('#dfe4ff');
-    //toolsGame.bgSet('#000000');
     bgMenu = game.add.image(0, 0, 'backgroundMenu');
     bgMenu.fixedToCamera = true;
 
@@ -4144,8 +3825,7 @@ const create = () => {
 
     toolsGame.buttons.levels.show();
     toolsGame.buttons.dude2.show();
-    //console.log('mute: ' + (getCookies('mute')?true:false));
-    game.sound.mute = getCookies('mute')?true:false;
+    game.sound.mute = !!getCookies('mute');
 
     // fix for repeat onload
     let onlyOneLoad=true;
@@ -4153,13 +3833,7 @@ const create = () => {
         if(onlyOneLoad) {
             //restart ewentualnych mocy playera
             toolsGame.mainElements.player.scale();
-
             toolsGame.preloader.hide();
-            // theEndCredits = false;
-            // if(Object.keys(game.cache._cacheMap[7]).length === levelFile.activeIdLevel) {
-            //     theEndCredits = true;
-            // }
-
             toolsGame.windows.boxTopMenu.f=false;
             if(!theEndCredits) {
                 //console.log("test load create");
@@ -4210,7 +3884,6 @@ const create = () => {
 
 };
 
-// cccccc
 window.addEventListener('resize', function(){
     //if(screen.width === window.innerWidth && screen.height === window.innerHeight){
 
@@ -4241,2513 +3914,1910 @@ window.addEventListener('resize', function(){
 });
 
 // main loop the game
+
 const update = () => {
+    if (!playGame.main) return;
+
+    const arcade = game.physics.arcade;
+    const timeEvents = game.time.events;
+
+    // Główne obiekty z toolsGame
+    const tMain = toolsGame.mainElements;
+    const tPlayer = tMain.player;
+    const tGun = tPlayer.gun;
+    const tIntruders = tMain.intruders;
+    const tStoneBigS = tMain.stoneBigS;
+    const tFireBs = tMain.firebs;
+    const tWaters = tMain.waters;
+    const tLogs = tMain.logs;
+    const tCoins = tMain.coins;
+    const tLifes = tMain.Lifes;
+    const tLifeSingleS = tMain.LifeSingleS;
+    const tBulletsGuns = tMain.bulletsGuns;
+    const tEndLevelS = tMain.endLevelS;
+    const tSaveLevelS = tMain.saveLevelS;
+    const tKeys = tMain.keys;
+    const tLocks = tMain.locks;
+    const tInsideHouses0 = tMain.insideHouses0;
+    const tInsideHouses1 = tMain.insideHouses1;
+    const tInsideHouses2 = tMain.insideHouses2;
+    const tSplashs = tMain.splashs;
+    const tCactusAnimateS = tMain.cactusAnimateS;
+    const tStoneBigExplosion = tMain.stoneBigExplosion;
+    const tFire = tMain.fire;
+
+    // Z mapy i layery
+    const curMap = map;    // Zamiast map
+    const curLayer = layer; // Zamiast layer
+
+    // Cursors (sterowanie)
+    const cLeft = cursors.left;
+    const cRight = cursors.right;
+    const cUp = cursors.up;
+    const cDown = cursors.down;
+
+    // let jKillF = jumpKillF;
+    // let jKillY = jumpKillY;
+    // let localFacing = facing;
+    // let localTimeLoop = timeLoop;
+    // let localPlayerSpeedLeftRight = playerSpeedLeftRight;
+    // let localCursorDirection = cursorDirection;
+
+    const tWindows = toolsGame.windows; // np. toolsGame.windows.boxTopMenu
+    const audio = toolsGame.audio;      // np. toolsGame.audio.coin(), .life() itd.
 
 
-    // game.camera.scale.x+=0.0001;
-    // game.camera.scale.y+=0.0001;
+    tMain.windmillNewS.obj1.forEach(function(windmill){
+        windmill.angle += 1;
+    }, this, true);
 
-    if(playGame.main)
-    {
-
-
-        toolsGame.mainElements.windmillNewS.obj1.forEach(function(windmill){
-            windmill.angle += 1;
-        }, this, true);
-
-        // dopracowac kolizje playera
-        //console.log('player: ');
-        //console.log(toolsGame.mainElements.player.obj.body);
-        toolsGame.mainElements.player.obj.body.offset.x=8;
-        toolsGame.mainElements.player.obj.body.width = 32;
-        //console.log(toolsGame.mainElements.player.obj.body);
-
-        // toolsGame.mainElements.cactusAnimateS.obj.forEach(function(c){
-        //     c.body.width = 39;  // 61,94
-        //     c.body.height = 70;
-        //     c.body.offset.y=11;
-        //     c.body.offset.x=11;
-        // }, this, true);
+    // dopracowac kolizje playera
+    tPlayer.obj.body.offset.x=8;
+    tPlayer.obj.body.width = 32;
 
 
-        if((cursors.left.isDown || cursors.right.isDown || cursors.up.isDown) && !jumpKillF) {
-            jumpKillY=toolsGame.mainElements.player.obj.body.y;
-            jumpKillF=true;
-            toolsGame.mainElements.player.obj.body.bounce.y = 0.3;
+    if((cLeft.isDown || cRight.isDown || cUp.isDown) && !jumpKillF) {
+        jumpKillY = tPlayer.obj.body.y;
+        jumpKillF = true;
+        tPlayer.obj.body.bounce.y = 0.3;
+    }
+
+    // player vs lay
+    arcade.overlap(tGun.bullets.obj, curLayer, function(bullet,lay){
+        if(
+            lay.index === 463 || lay.index === 564 || lay.index === 465 ||
+            lay.index === 217 || lay.index === 218 || lay.index === 219
+        ) {
+            // dopracować - ddoatkowy waruek dla konca mapy
+            // jesli osoba uzyje shotguna to moze utracic niespodzianki o zloto -musi sie z tym liczyc, mozna dodac do instrukcji gry
+            if (
+                lay.x-1> 0 && lay.y-1>0 &&
+                (
+                    curMap.getTile(lay.x-1, lay.y-1, curLayer, true).index === 463 ||
+                    curMap.getTile(lay.x-1, lay.y-1, curLayer, true).index === 564 ||
+                    curMap.getTile(lay.x-1, lay.y-1, curLayer, true).index === 465 ||
+                    curMap.getTile(lay.x-1, lay.y-1, curLayer, true).index === 217 ||
+                    curMap.getTile(lay.x-1, lay.y-1, curLayer, true).index === 218 ||
+                    curMap.getTile(lay.x-1, lay.y-1, curLayer, true).index === 219
+                )
+            )  curMap.removeTile(lay.x-1, lay.y-1);
+            if (
+                curMap.getTile(lay.x+1, lay.y+1, curLayer, true).index === 463 ||
+                curMap.getTile(lay.x+1, lay.y+1, curLayer, true).index === 564 ||
+                curMap.getTile(lay.x+1, lay.y+1, curLayer, true).index === 465 ||
+                curMap.getTile(lay.x+1, lay.y+1, curLayer, true).index === 217 ||
+                curMap.getTile(lay.x+1, lay.y+1, curLayer, true).index === 218 ||
+                curMap.getTile(lay.x+1, lay.y+1, curLayer, true).index === 219
+            )  curMap.removeTile(lay.x+1, lay.y+1);
+            if (
+                curMap.getTile(lay.x+1, lay.y, curLayer, true).index === 463 ||
+                curMap.getTile(lay.x+1, lay.y, curLayer, true).index === 564 ||
+                curMap.getTile(lay.x+1, lay.y, curLayer, true).index === 465 ||
+                curMap.getTile(lay.x+1, lay.y, curLayer, true).index === 217 ||
+                curMap.getTile(lay.x+1, lay.y, curLayer, true).index === 218 ||
+                curMap.getTile(lay.x+1, lay.y, curLayer, true).index === 219
+            )  curMap.removeTile(lay.x+1, lay.y);
+            if (
+                curMap.getTile(lay.x, lay.y+1, curLayer, true).index === 463 ||
+                curMap.getTile(lay.x, lay.y+1, curLayer, true).index === 564 ||
+                curMap.getTile(lay.x, lay.y+1, curLayer, true).index === 465 ||
+                curMap.getTile(lay.x, lay.y+1, curLayer, true).index === 217 ||
+                curMap.getTile(lay.x, lay.y+1, curLayer, true).index === 218 ||
+                curMap.getTile(lay.x, lay.y+1, curLayer, true).index === 219
+            )  curMap.removeTile(lay.x, lay.y+1);
+            if (
+                lay.x-1>0 &&
+                (
+                    curMap.getTile(lay.x-1, lay.y, curLayer, true).index === 463 ||
+                    curMap.getTile(lay.x-1, lay.y, curLayer, true).index === 564 ||
+                    curMap.getTile(lay.x-1, lay.y, curLayer, true).index === 465 ||
+                    curMap.getTile(lay.x-1, lay.y, curLayer, true).index === 217 ||
+                    curMap.getTile(lay.x-1, lay.y, curLayer, true).index === 218 ||
+                    curMap.getTile(lay.x-1, lay.y, curLayer, true).index === 219
+                )
+            )  curMap.removeTile(lay.x-1, lay.y);
+            if (
+                lay.y-1>0 &&
+                (
+                    curMap.getTile(lay.x, lay.y-1, curLayer, true).index === 463 ||
+                    curMap.getTile(lay.x, lay.y-1, curLayer, true).index === 564 ||
+                    curMap.getTile(lay.x, lay.y-1, curLayer, true).index === 465 ||
+                    curMap.getTile(lay.x, lay.y-1, curLayer, true).index === 217 ||
+                    curMap.getTile(lay.x, lay.y-1, curLayer, true).index === 218 ||
+                    curMap.getTile(lay.x, lay.y-1, curLayer, true).index === 219
+                )
+            )  curMap.removeTile(lay.x, lay.y-1);
+            if (
+                lay.x-1>0 &&
+                (
+                    curMap.getTile(lay.x-1, lay.y+1, curLayer, true).index === 463 ||
+                    curMap.getTile(lay.x-1, lay.y+1, curLayer, true).index === 564 ||
+                    curMap.getTile(lay.x-1, lay.y+1, curLayer, true).index === 465 ||
+                    curMap.getTile(lay.x-1, lay.y+1, curLayer, true).index === 217 ||
+                    curMap.getTile(lay.x-1, lay.y+1, curLayer, true).index === 218 ||
+                    curMap.getTile(lay.x-1, lay.y+1, curLayer, true).index === 219
+                )
+            )  curMap.removeTile(lay.x-1, lay.y+1);
+            if (
+                lay.y-1>0 &&
+                (
+                    curMap.getTile(lay.x+1, lay.y-1, curLayer, true).index === 463 ||
+                    curMap.getTile(lay.x+1, lay.y-1, curLayer, true).index === 564 ||
+                    curMap.getTile(lay.x+1, lay.y-1, curLayer, true).index === 465 ||
+                    curMap.getTile(lay.x+1, lay.y-1, curLayer, true).index === 217 ||
+                    curMap.getTile(lay.x+1, lay.y-1, curLayer, true).index === 218 ||
+                    curMap.getTile(lay.x+1, lay.y-1, curLayer, true).index === 219
+                )
+            )  curMap.removeTile(lay.x+1, lay.y-1);
+            if (
+                curMap.getTile(lay.x+2, lay.y, curLayer, true).index === 463 ||
+                curMap.getTile(lay.x+2, lay.y, curLayer, true).index === 564 ||
+                curMap.getTile(lay.x+2, lay.y, curLayer, true).index === 465 ||
+                curMap.getTile(lay.x+2, lay.y, curLayer, true).index === 217 ||
+                curMap.getTile(lay.x+2, lay.y, curLayer, true).index === 218 ||
+                curMap.getTile(lay.x+2, lay.y, curLayer, true).index === 219
+            )  curMap.removeTile(lay.x+2, lay.y);
+            if (
+                lay.x-2>0 && (
+                    curMap.getTile(lay.x-2, lay.y, curLayer, true).index === 463 ||
+                    curMap.getTile(lay.x-2, lay.y, curLayer, true).index === 564 ||
+                    curMap.getTile(lay.x-2, lay.y, curLayer, true).index === 465 ||
+                    curMap.getTile(lay.x-2, lay.y, curLayer, true).index === 217 ||
+                    curMap.getTile(lay.x-2, lay.y, curLayer, true).index === 218 ||
+                    curMap.getTile(lay.x-2, lay.y, curLayer, true).index === 219
+                )
+            )  curMap.removeTile(lay.x-2, lay.y);
+
+            tMain.explosion.add(lay.x, lay.y);
+            curMap.removeTile(lay.x, lay.y);
+            if(lay.index === 463)  tLogs.add(lay.x, lay.y,false,'log');
+            if(lay.index === 564)  tLogs.add(lay.x, lay.y, 'coin', 'log');
+            if(lay.index === 465)  tLogs.add(lay.x, lay.y, 'surprise', 'log');
+            if(lay.index === 217)  tLogs.add(lay.x, lay.y,false,'stone');
+            if(lay.index === 218)  tLogs.add(lay.x, lay.y,'coin','stone');
+            if(lay.index === 219)  tLogs.add(lay.x, lay.y,'surprise','stone');
+        }
+        else if(lay.index>0 && bullet) {
+            bullet.kill();
+            tMain.explosion.add(lay.x, lay.y);
+        }
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, curLayer, function(player, lay){
+        if(lay.index === 101) {
+            //console.log(curLayer);
+            lay.collideDown=false;
+            lay.collideUp=false;
+            lay.collideLeft=false;
+            lay.collideRight=false;
+            timeEvents.add(1, function(){
+                lay.collideDown=true;
+                lay.collideUp=true;
+                lay.collideLeft=true;
+                lay.collideRight=true;
+            },this);
+        }
+        else if(lay.index === 417) {
+            curMap.removeTile(lay.x, lay.y, curLayer);
+            curMap.putTile(416,lay.x, lay.y, curLayer);
+            tMain.openDoor(player);
+        }
+        else if(
+            lay.index === 463 || lay.index === 564 || lay.index === 465 ||
+            lay.index === 217 || lay.index === 218 || lay.index === 219
+        ) {
+            //console.log("log collide;");
+            curMap.removeTile(lay.x, lay.y);
+            if(lay.index === 463)  tLogs.add(lay.x, lay.y,false,'log');
+            if(lay.index === 564)  tLogs.add(lay.x, lay.y, 'coin', 'log');
+            if(lay.index === 465)  tLogs.add(lay.x, lay.y, 'surprise', 'log');
+            if(lay.index === 217)  tLogs.add(lay.x, lay.y,false,'stone');
+            if(lay.index === 218)  tLogs.add(lay.x, lay.y,'coin','stone');
+            if(lay.index === 219)  tLogs.add(lay.x, lay.y,'surprise','stone');
+        }
+    }, null, this);
+
+    // usuwanie kolizji miedzy bullet a niewidzialnym blockiem dla intruzow
+    arcade.overlap(tGun.bullets.obj, curLayer, function(bullet, lay){
+        //console.log(lay.index);
+        if(lay.index === 101) {
+            lay.collideDown=false;
+            lay.collideUp=false;
+            lay.collideLeft=false;
+            lay.collideRight=false;
+            timeEvents.add(1, function(){
+                lay.collideDown=true;
+                lay.collideUp=true;
+                lay.collideLeft=true;
+                lay.collideRight=true;
+            },this);
+        }
+    }, null, this);
+
+
+    tPlayer.obj.t1=false;
+    arcade.collide(tPlayer.obj, curLayer, function(player){
+        tPlayer.checkIfWasKilledAndOther(player);
+
+        if(player.killHitIntruder) {
+            player.killHitIntruder=false;
         }
 
-        //console.log(map);
+        // wchodzenie pod gorke
+        if((cRight.isDown || cLeft.isDown) && (player.body.blocked.right || player.body.blocked.left) && !jumpButton.isDown && player.body.onFloor())
+        {
+            player.body.velocity.y = -12*tileSize;
+        }
+    },null, this);
 
-        // position player
+    arcade.collide(tCoins.obj, curLayer);
 
-        //console.log(toolsGame.mainElements.player.obj.body.y + ' + ' + toolsGame.mainElements.player.obj.height + ' = ' + map.height*map.tileHeight);
-        //console.log("x: " + toolsGame.mainElements.player.obj.body.x + " / " + "y: " + toolsGame.mainElements.player.obj.body.y);
+    arcade.collide(tLogs.obj, curLayer);
 
+    // dopracowac - to musi byc aby intruders mogli przemieszcac sie p ktych kladkach
+    arcade.collide(tLogs.obj,tIntruders.obj,function(l,i){
+        tIntruders.collisionBack(i);
+    }, null, this);
 
+    arcade.collide(tLogs.obj,tLogs.obj,function(log){});
 
-        //generowanie animowanych klod z niespodzianka
-        // if (map.getTile(x, y, layer, true).index==514)
-        // {
-        //     toolsGame.mainElements.logs.add(x,y,true);
-        //     toolsGame.mainElements.logs.lengthBonusCoins ++;
-        //     map.removeTile(x, y, layer);
-        // }
-        // toolsGame.mainElements.windmillNewS.obj1.forEach(function(windmill){
-        //     windmill.angle += 1;
-        // }, this, true);
+    arcade.overlap(tMain.invisibleLogs.obj, tPlayer.obj, function(log,p){
 
-
-
-
-
-        //console.log(map);
-
-        // player vs lay
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.gun.bullets.obj, layer, function(bullet,lay){
-            if(
-                lay.index === 463 || lay.index === 564 || lay.index === 465 ||
-                lay.index === 217 || lay.index === 218 || lay.index === 219
-            ) {
-                //console.log("destruction");
-
-                // dopracować - ddoatkowy waruek dla konca mapy
-                // jesli osoba uzyje shotguna to moze utracic niespodzianki o zloto -musi sie z tym liczyc, mozna dodac do instrukcji gry
-                if (
-                    lay.x-1> 0 && lay.y-1>0 &&
-                    (
-                        map.getTile(lay.x-1, lay.y-1, layer, true).index === 463 ||
-                        map.getTile(lay.x-1, lay.y-1, layer, true).index === 564 ||
-                        map.getTile(lay.x-1, lay.y-1, layer, true).index === 465 ||
-                        map.getTile(lay.x-1, lay.y-1, layer, true).index === 217 ||
-                        map.getTile(lay.x-1, lay.y-1, layer, true).index === 218 ||
-                        map.getTile(lay.x-1, lay.y-1, layer, true).index === 219
-                    )
-                )  map.removeTile(lay.x-1, lay.y-1);
-                if (
-                    map.getTile(lay.x+1, lay.y+1, layer, true).index === 463 ||
-                    map.getTile(lay.x+1, lay.y+1, layer, true).index === 564 ||
-                    map.getTile(lay.x+1, lay.y+1, layer, true).index === 465 ||
-                    map.getTile(lay.x+1, lay.y+1, layer, true).index === 217 ||
-                    map.getTile(lay.x+1, lay.y+1, layer, true).index === 218 ||
-                    map.getTile(lay.x+1, lay.y+1, layer, true).index === 219
-                )  map.removeTile(lay.x+1, lay.y+1);
-                if (
-                    map.getTile(lay.x+1, lay.y, layer, true).index === 463 ||
-                    map.getTile(lay.x+1, lay.y, layer, true).index === 564 ||
-                    map.getTile(lay.x+1, lay.y, layer, true).index === 465 ||
-                    map.getTile(lay.x+1, lay.y, layer, true).index === 217 ||
-                    map.getTile(lay.x+1, lay.y, layer, true).index === 218 ||
-                    map.getTile(lay.x+1, lay.y, layer, true).index === 219
-                )  map.removeTile(lay.x+1, lay.y);
-                if (
-                    map.getTile(lay.x, lay.y+1, layer, true).index === 463 ||
-                    map.getTile(lay.x, lay.y+1, layer, true).index === 564 ||
-                    map.getTile(lay.x, lay.y+1, layer, true).index === 465 ||
-                    map.getTile(lay.x, lay.y+1, layer, true).index === 217 ||
-                    map.getTile(lay.x, lay.y+1, layer, true).index === 218 ||
-                    map.getTile(lay.x, lay.y+1, layer, true).index === 219
-                )  map.removeTile(lay.x, lay.y+1);
-                if (
-                    lay.x-1>0 &&
-                    (
-                        map.getTile(lay.x-1, lay.y, layer, true).index === 463 ||
-                        map.getTile(lay.x-1, lay.y, layer, true).index === 564 ||
-                        map.getTile(lay.x-1, lay.y, layer, true).index === 465 ||
-                        map.getTile(lay.x-1, lay.y, layer, true).index === 217 ||
-                        map.getTile(lay.x-1, lay.y, layer, true).index === 218 ||
-                        map.getTile(lay.x-1, lay.y, layer, true).index === 219
-                    )
-                )  map.removeTile(lay.x-1, lay.y);
-                if (
-                    lay.y-1>0 &&
-                    (
-                        map.getTile(lay.x, lay.y-1, layer, true).index === 463 ||
-                        map.getTile(lay.x, lay.y-1, layer, true).index === 564 ||
-                        map.getTile(lay.x, lay.y-1, layer, true).index === 465 ||
-                        map.getTile(lay.x, lay.y-1, layer, true).index === 217 ||
-                        map.getTile(lay.x, lay.y-1, layer, true).index === 218 ||
-                        map.getTile(lay.x, lay.y-1, layer, true).index === 219
-                    )
-                )  map.removeTile(lay.x, lay.y-1);
-                if (
-                    lay.x-1>0 &&
-                    (
-                        map.getTile(lay.x-1, lay.y+1, layer, true).index === 463 ||
-                        map.getTile(lay.x-1, lay.y+1, layer, true).index === 564 ||
-                        map.getTile(lay.x-1, lay.y+1, layer, true).index === 465 ||
-                        map.getTile(lay.x-1, lay.y+1, layer, true).index === 217 ||
-                        map.getTile(lay.x-1, lay.y+1, layer, true).index === 218 ||
-                        map.getTile(lay.x-1, lay.y+1, layer, true).index === 219
-                    )
-                )  map.removeTile(lay.x-1, lay.y+1);
-                if (
-                    lay.y-1>0 &&
-                    (
-                        map.getTile(lay.x+1, lay.y-1, layer, true).index === 463 ||
-                        map.getTile(lay.x+1, lay.y-1, layer, true).index === 564 ||
-                        map.getTile(lay.x+1, lay.y-1, layer, true).index === 465 ||
-                        map.getTile(lay.x+1, lay.y-1, layer, true).index === 217 ||
-                        map.getTile(lay.x+1, lay.y-1, layer, true).index === 218 ||
-                        map.getTile(lay.x+1, lay.y-1, layer, true).index === 219
-                    )
-                )  map.removeTile(lay.x+1, lay.y-1);
-                if (
-                    map.getTile(lay.x+2, lay.y, layer, true).index === 463 ||
-                    map.getTile(lay.x+2, lay.y, layer, true).index === 564 ||
-                    map.getTile(lay.x+2, lay.y, layer, true).index === 465 ||
-                    map.getTile(lay.x+2, lay.y, layer, true).index === 217 ||
-                    map.getTile(lay.x+2, lay.y, layer, true).index === 218 ||
-                    map.getTile(lay.x+2, lay.y, layer, true).index === 219
-                )  map.removeTile(lay.x+2, lay.y);
-                if (
-                    lay.x-2>0 && (
-                        map.getTile(lay.x-2, lay.y, layer, true).index === 463 ||
-                        map.getTile(lay.x-2, lay.y, layer, true).index === 564 ||
-                        map.getTile(lay.x-2, lay.y, layer, true).index === 465 ||
-                        map.getTile(lay.x-2, lay.y, layer, true).index === 217 ||
-                        map.getTile(lay.x-2, lay.y, layer, true).index === 218 ||
-                        map.getTile(lay.x-2, lay.y, layer, true).index === 219
-                    )
-                )  map.removeTile(lay.x-2, lay.y);
-
-                toolsGame.mainElements.explosion.add(lay.x, lay.y);
-                map.removeTile(lay.x, lay.y);
-                if(lay.index === 463)  toolsGame.mainElements.logs.add(lay.x, lay.y,false,'log');
-                if(lay.index === 564)  toolsGame.mainElements.logs.add(lay.x, lay.y, 'coin', 'log');
-                if(lay.index === 465)  toolsGame.mainElements.logs.add(lay.x, lay.y, 'surprise', 'log');
-                if(lay.index === 217)  toolsGame.mainElements.logs.add(lay.x, lay.y,false,'stone');
-                if(lay.index === 218)  toolsGame.mainElements.logs.add(lay.x, lay.y,'coin','stone');
-                if(lay.index === 219)  toolsGame.mainElements.logs.add(lay.x, lay.y,'surprise','stone');
-
-                // if(lay.index === 564 || lay.index === 465 || lay.index === 218 || lay.index === 219) {
-                //     toolsGame.audio.bingo();
-                // }
-
-
-            }
-            else if(lay.index>0 && bullet) {
-                bullet.kill();
-                toolsGame.mainElements.explosion.add(lay.x, lay.y);
-            }
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, layer, function(player, lay){
-            if(lay.index === 101) {
-                //console.log(layer);
-                lay.collideDown=false;
-                lay.collideUp=false;
-                lay.collideLeft=false;
-                lay.collideRight=false;
-                game.time.events.add(1, function(){
-                    lay.collideDown=true;
-                    lay.collideUp=true;
-                    lay.collideLeft=true;
-                    lay.collideRight=true;
-                },this);
-            }
-            else if(lay.index === 417) {
-                // let rotation = false, flippedVal = false;
-                // if(lay.rotation) {
-                //     rotation = lay.rotation;
-                //     flippedVal = lay.flippedVal;
-                // }
-                // //console.log(lay);
-                //console.log(lay);
-                map.removeTile(lay.x, lay.y, layer);
-                map.putTile(416,lay.x, lay.y, layer);
-                //console.log(rotation);
-                // lay.rotation = rotation;
-                // lay.flippedVal = flippedVal;
-                //console.log(lay.x + "x" + lay.y);
-                //game.time.events.add(1000,function(){
-                //    map.replace(417, 416, lay.x, lay.y, tileSize, tileSize, layer);
-                //},this);
-                // map.replace(417, 416, lay.x, lay.y, tileSize, tileSize, layer);
-                toolsGame.mainElements.openDoor(player);
-            }
-            else if(
-                lay.index === 463 || lay.index === 564 || lay.index === 465 ||
-                lay.index === 217 || lay.index === 218 || lay.index === 219
-            ) {
-                //console.log("log collide;");
-                map.removeTile(lay.x, lay.y);
-                if(lay.index === 463)  toolsGame.mainElements.logs.add(lay.x, lay.y,false,'log');
-                if(lay.index === 564)  toolsGame.mainElements.logs.add(lay.x, lay.y, 'coin', 'log');
-                if(lay.index === 465)  toolsGame.mainElements.logs.add(lay.x, lay.y, 'surprise', 'log');
-                if(lay.index === 217)  toolsGame.mainElements.logs.add(lay.x, lay.y,false,'stone');
-                if(lay.index === 218)  toolsGame.mainElements.logs.add(lay.x, lay.y,'coin','stone');
-                if(lay.index === 219)  toolsGame.mainElements.logs.add(lay.x, lay.y,'surprise','stone');
-
-                // if(lay.index === 564 || lay.index === 465 || lay.index === 218 || lay.index === 219) {
-                //     toolsGame.audio.bingo();
-                // }
-            }
-        }, null, this);
-
-        // usuwanie kolizji miedzy bullet a niewidzialnym blockiem dla intruzow
-        game.physics.arcade.overlap(toolsGame.mainElements.player.gun.bullets.obj, layer, function(bullet, lay){
-            //console.log(lay.index);
-            if(lay.index === 101) {
-                //console.log(layer);
-                //console.log("shot");
-                lay.collideDown=false;
-                lay.collideUp=false;
-                lay.collideLeft=false;
-                lay.collideRight=false;
-                game.time.events.add(1, function(){
-                    lay.collideDown=true;
-                    lay.collideUp=true;
-                    lay.collideLeft=true;
-                    lay.collideRight=true;
-                },this);
-            }
-        }, null, this);
-
-
-        toolsGame.mainElements.player.obj.t1=false;
-        game.physics.arcade.collide(toolsGame.mainElements.player.obj, layer, function(player, layer){
-            //console.log(player.body.checkCollision.down);
-            //console.log(player.body.blocked.right);
-
-            // player.t1=true;
-            // if(!player.onGround) {
-            //     toolsGame.audio.footStep();
-            //     player.onGround=true;
-            // }
-            //
-            // if(cursors.left.isDown || cursors.right.isDown) {
-            //     toolsGame.audio.footStep();
-            // }
-
-            toolsGame.mainElements.player.checkIfWasKilledAndOther(player);
-
-            if(player.killHitIntruder) {
-                player.killHitIntruder=false;
+        if(!p.onlynOne && !(tPlayer.obj.body.overlapY>0)) {
+            //p.body.allowGravity = true;
+            p.body.velocity.y = -330;
+            if(facing === 'left') {
+                p.body.velocity.x = -30;
+            } else if(facing === 'right') {
+                p.body.velocity.x = 30;
             }
 
-            // wchodzenie pod gorke
-            if((cursors.right.isDown || cursors.left.isDown) && (player.body.blocked.right || player.body.blocked.left) && !jumpButton.isDown && player.body.onFloor())
-            {
-                //console.log("up");
-                player.body.velocity.y = -12*tileSize;
+            audio.breakGround();
+
+            timeEvents.add(50, function(){
+                p.body.allowGravity = true;
+                p.body.checkCollision.down=false;
+            },this);
+            p.originY = p.y;
+
+            p.scale.setTo(1, 1);
+            p.animations.add('run',[11,10,9,8,7,6,5,4,3,2,1,0,0,0]).onComplete.add(function(){
+                p.originX = p.x;
+                audio.magic();
+                curMap.putTile(104, Math.ceil(p.originX/tileSize), Math.ceil(p.originY/tileSize)+1, curLayer);
+                curMap.putTile(104, Math.ceil(p.originX/tileSize)+1, Math.ceil(p.originY/tileSize)+1, curLayer);
+                curMap.putTile(104, Math.ceil(p.originX/tileSize)+2, Math.ceil(p.originY/tileSize)+1, curLayer);
+                curMap.putTile(104, Math.ceil(p.originX/tileSize)-1, Math.ceil(p.originY/tileSize)+1, curLayer);
+                curMap.putTile(104, Math.ceil(p.originX/tileSize)-2, Math.ceil(p.originY/tileSize)+1, curLayer);
+                p.kill();
+            }, this);
+            p.animations.play('run', 15, false);
+            p.onlynOne= true;
+        }
+
+
+    }, null, this);
+
+    arcade.overlap(tGun.bullets.obj, tLogs.obj, function(bullet,log){
+        tLogs.destruction(log);
+        bullet.kill();
+    }, null, this);
+
+    arcade.collide(tLogs.obj, tPlayer.obj, function(log,p){
+        if(tPlayer.obj.body.overlapY>0)
+        {
+            tPlayer.checkIfWasKilledAndOther(tPlayer.obj);
+            p.isUp=true;
+            tPlayer.obj.body.allowGravity = false;
+            timeEvents.add(300, function(){
+                p.isUp=false;
+            },this);
+        } else {
+            tLogs.destruction(p);
+        }
+    }, null, this);
+
+
+    /* big stone */
+    tStoneBigS.obj.forEach(function(s){
+        // przyrost odleglosci w spadaniu
+        if(s.body.gravity.x!==0) {
+            s.body.gravity.x=0;
+        }
+        if(s.keepStone){
+            tStoneBigS.keepStone = true;
+            s.y=tPlayer.obj.y+tPlayer.obj.height-(s.body.height/2);
+            if(cursorDirection === 'right'){
+                s.x=tPlayer.obj.x+tPlayer.obj.width;
+            } else if(cursorDirection === 'left') {
+                s.x=tPlayer.obj.x;
             }
-            //console.log("x: " + player.body.x + " / " + "y: " + player.body.y);
-        },null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.coins.obj, layer);
-
-        game.physics.arcade.collide(toolsGame.mainElements.logs.obj, layer);
-
-        //game.physics.arcade.collide(toolsGame.mainElements.invisibleLogs.obj, layer);
-
-        // game.physics.arcade.overlap(toolsGame.mainElements.player.gun.bullets.obj, toolsGame.mainElements.intruders.obj, function(bullet, intruz){
-        //     //jden strzal wywoluje jedna funkcje...
-        //     if(!intruz.killing) toolsGame.mainElements.intruders.collisionIntruz(intruz,"total-kill");
-        //     intruz.killing=true;
-        //     bullet.kill();
-        // }, null, this);
-
-        ///\\\///
-        // game.physics.arcade.overlap(toolsGame.mainElements.logs.obj, toolsGame.mainElements.player.obj, function(log,p){
-        //     p.isUp=false;
-        // },null, this);
-
-
-        // dopracowac - to musi byc aby intruders mogli przemieszcac sie p ktych kladkach
-        game.physics.arcade.collide(toolsGame.mainElements.logs.obj,toolsGame.mainElements.intruders.obj,function(l,i){
-            // nie wykrywa blokowania dla intruza
-            //console.log("intruz:");
-            //console.log(i.body);
-            //console.log("log:");
-            //console.log(l.body);
-            //console.log(l.body);
-            toolsGame.mainElements.intruders.collisionBack(i);
-        }, null, this);
-
-        //
-        // game.physics.arcade.overlap(toolsGame.mainElements.logs.obj,toolsGame.mainElements.intruders.obj,function(l,i){
-        //     //console.log(i.body.blocked);
-        // }, null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.logs.obj,toolsGame.mainElements.logs.obj,function(log){
-            // dla logs tez dziala
-            //toolsGame.intruzCollisonBack(log);
-        });
-
-        game.physics.arcade.overlap(toolsGame.mainElements.invisibleLogs.obj, toolsGame.mainElements.player.obj, function(log,p){
-
-            if(!p.onlynOne && !(toolsGame.mainElements.player.obj.body.overlapY>0)) {
-                //p.body.allowGravity = true;
-                p.body.velocity.y = -330;
-                if(facing === 'left') {
-                    p.body.velocity.x = -30;
-                } else if(facing === 'right') {
-                    p.body.velocity.x = 30;
-                }
-
-                toolsGame.audio.breakGround();
-
-                game.time.events.add(50, function(){
-                    p.body.allowGravity = true;
-                    p.body.checkCollision.down=false;
-                },this);
-                //console.log(p.x);
-                //console.log(p.y);
-                //p.originX = p.x;
-                p.originY = p.y;
-
-                p.scale.setTo(1, 1);
-                p.animations.add('run',[11,10,9,8,7,6,5,4,3,2,1,0,0,0]).onComplete.add(function(){
-                    //console.log(Math.ceil(p.x/tileSize));
-                    //console.log(Math.ceil(p.y/tileSize));
-                    p.originX = p.x;
-                    toolsGame.audio.magic();
-                    map.putTile(104, Math.ceil(p.originX/tileSize), Math.ceil(p.originY/tileSize)+1, layer);
-                    map.putTile(104, Math.ceil(p.originX/tileSize)+1, Math.ceil(p.originY/tileSize)+1, layer);
-                    map.putTile(104, Math.ceil(p.originX/tileSize)+2, Math.ceil(p.originY/tileSize)+1, layer);
-                    map.putTile(104, Math.ceil(p.originX/tileSize)-1, Math.ceil(p.originY/tileSize)+1, layer);
-                    map.putTile(104, Math.ceil(p.originX/tileSize)-2, Math.ceil(p.originY/tileSize)+1, layer);
-                    p.kill();
-                }, this);
-                p.animations.play('run', 15, false);
-                p.onlynOne= true;
+        } else {
+            if(Math.ceil(s.body._dy)>4){
+                s.quake=true;
             }
-
-
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.gun.bullets.obj, toolsGame.mainElements.logs.obj, function(bullet,log){
-            toolsGame.mainElements.logs.destruction(log);
-            //console.log(log);
-            // if(!p.onlynOne) {
-            //     //p.body.allowGravity = true;
-            //     p.body.velocity.y = -330;
-            //     if (facing === 'left') {
-            //         p.body.velocity.x = -130;
-            //     } else if (facing === 'right') {
-            //         p.body.velocity.x = 130;
-            //     }
-            //
-            //     toolsGame.audio.breakGround();
-            //
-            //     game.time.events.add(50, function () {
-            //         p.body.allowGravity = true;
-            //         p.body.checkCollision.down = false;
-            //     }, this);
-            //     p.animations.add('run');
-            //     game.time.events.add(300, function () {
-            //         p.animations.play('run', 20, false);
-            //     }, this);
-            //
-            //     // jesli id = 514 to dostajemy bonusowe zloto
-            //     if (p.coin) {
-            //         game.time.events.add(200, function () {
-            //             toolsGame.mainElements.coins.add(p.x / tileSize, p.y / tileSize);
-            //         }, this);
-            //     } else if (p.surprise) {
-            //         game.time.events.add(200, function () {
-            //             //console.log(p.surprise);
-            //             switch (p.surprise) {
-            //                 case 1:
-            //                     toolsGame.mainElements.bulletsGuns.add(p.x / tileSize, p.y / tileSize);
-            //                     break;
-            //                 case 2:
-            //                     toolsGame.mainElements.LifeSingleS.add(p.x / tileSize, p.y / tileSize);
-            //                     break;
-            //                 case 3:
-            //                     toolsGame.mainElements.intruders.add(p.x / tileSize, p.y / tileSize, 3);
-            //                     break;
-            //                 case 4:
-            //                     toolsGame.mainElements.coins.add(p.x / tileSize, p.y / tileSize);
-            //                     break;
-            //                 case 5:
-            //                     toolsGame.mainElements.intruders.add(p.x / tileSize, p.y / tileSize, 5);
-            //                     break;
-            //             }
-            //         }, this);
-            //     }
-            //
-            //     game.time.events.add(900, function () {
-            //         // toolsGame.mainElements.coins.add(p.saveX/tileSize, p.saveY/tileSize);
-            //         p.kill();
-            //     }, this);
-            //     p.onlynOne = true;
-            // }
-            bullet.kill();
-        }, null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.logs.obj, toolsGame.mainElements.player.obj, function(log,p){
-            if(toolsGame.mainElements.player.obj.body.overlapY>0)
-            {
-                toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-                p.isUp=true;
-                toolsGame.mainElements.player.obj.body.allowGravity = false;
-                game.time.events.add(300, function(){
-                    p.isUp=false;
-                },this);
-            } else {
-                toolsGame.mainElements.logs.destruction(p);
-            }
-        }, null, this);
-
-
-        /* big stone */
-
-        toolsGame.mainElements.stoneBigS.obj.forEach(function(s){
-            // przyrost odleglosci w spadaniu
-            if(s.body.gravity.x!==0) {
-                s.body.gravity.x=0;
-            }
-            if(s.keepStone){
-                //s.angle = 0;
-                toolsGame.mainElements.stoneBigS.keepStone = true;
-                s.y=toolsGame.mainElements.player.obj.y+toolsGame.mainElements.player.obj.height-(s.body.height/2);
-                if(cursorDirection === 'right'){
-                    s.x=toolsGame.mainElements.player.obj.x+toolsGame.mainElements.player.obj.width;
-                } else if(cursorDirection === 'left') {
-                    s.x=toolsGame.mainElements.player.obj.x;
-                }
-            } else {
-                if(Math.ceil(s.body._dy)>4){
-                    s.quake=true;
-                }
-            }
-        }, this, true);
-        game.physics.arcade.collide(toolsGame.mainElements.stoneBigS.obj, layer, function(s,lay){
-            //console.log(s);
-            if(s.quake) {
-                toolsGame.audio.quake();
-                game.camera.shake(0.005, 200, true, Phaser.Camera.SHAKE_VERTICAL);
-                s.quake=false;
-            }
-        }, null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.intruders.obj, toolsGame.mainElements.stoneBigS.obj,function(i,s){
-
-            if(s.quake) {
-                s.quake=false;
-                // pomimo height 0 ciagle pojawia sie male opznienie
-                if(i.body.overlapY<0 && i.body.height) {
-                    i.body.height=0;
-                    //console.log(i.body);
-                    // i.body.y=100;
-                    // i.body.x=100;
-                    if(!i.killing) {
-                        toolsGame.mainElements.intruders.collisionIntruz(i, "total-kill");
-                    }
-                    i.killing=true;
-                }
-                toolsGame.audio.quake();
-                game.camera.shake(0.005, 200, true, Phaser.Camera.SHAKE_VERTICAL);
-            } else {
-                toolsGame.mainElements.intruders.collisionBack(i);
-                s.body.moves = false;
-                s.body.immovable = true;
-
-                game.time.events.remove(s.fOnlyOne);
-                s.fOnlyOne=game.time.events.add(300, function(){
-                    s.body.moves = true;
-                    s.body.immovable = false;
-                    s.body.velocity.x = 0;
-                    s.body.velocity.y = 0;
-                }, this);
-            }
-        }, null, this);
-        game.physics.arcade.collide(toolsGame.mainElements.player.gun.bullets.obj, toolsGame.mainElements.stoneBigS.obj,function(b,s){
-            toolsGame.mainElements.explosion.add(b.body.position.x/tileSize, b.body.position.y/tileSize);
-            toolsGame.mainElements.stoneBigExplosion.add(s.body.position.x/tileSize, s.body.position.y/tileSize);
-            s.kill();
-            b.kill();
-        }, null, this);
-
-        //game.physics.arcade.collide(toolsGame.mainElements.stoneBigS.obj, layer);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.gun.bullets.obj, toolsGame.mainElements.insideHouses1.obj,function(b,s){
-            toolsGame.mainElements.explosion.add(b.body.position.x/tileSize, b.body.position.y/tileSize);
-            //toolsGame.mainElements.stoneBigExplosion.add(s.body.position.x/tileSize, s.body.position.y/tileSize);
-            //s.kill();
-            b.kill();
-        }, null, this);
-
-        // cccc
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.insideHouses0.obj, function(p,s){
-            //console.log((s.body.position.x/tileSize) + Math.ceil((s.body.width/tileSize)/2) - 1);    //overlap
-            //console.log(s.randomString);
-            if(p.body.position.x > s.body.position.x+40 && p.body.position.x < s.body.position.x+130 && p.body.position.y > s.body.position.y+100) {
-                toolsGame.addPoint(s.x+45,s.y+100,'youCanEnter'+toolsGame.mainElements.player.numberLifes,'You can come in');
-                if (!p.insideHouse && cursors.down.isDown) {
-                    p.insideHouse = true;
-                    //alert(s.randomString);
-                    p.insideHouseRandomNumber = s.randomString;
-
-                    game.time.events.add(300, function () {
-                        p.insideHouse = false;
-                    }, this);
-                    const x = (s.body.position.x / tileSize) + (((s.body.width / tileSize) - 1) / 2);
-                    const y = (s.body.position.y / tileSize) + (s.body.height / tileSize) - 2;
-                    p.body.position.y = y * tileSize - p.body.height + 20;
-                    p.scale.y = .8;
-                    p.scale.x = .8;
-                    // toolsGame.mainElements.insideHouses2.add(x, y);
-
-                    toolsGame.mainElements.insideHouses1.add(x, y, p.insideHouseRandomNumber);
-                    toolsGame.mainElements.insideHouses0.hide(p.insideHouseRandomNumber);
-
-                }
-            }
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.insideHouses1.obj, function(p,s){
-
-            if(p.body.position.x > s.body.position.x+40 && p.body.position.x < s.body.position.x+130 && p.body.position.y > s.body.position.y+100) {
-                toolsGame.addPoint(s.x+35,s.y+100,'youCanEnter'+toolsGame.mainElements.player.numberLifes,'You can go outside');
-                if (!p.insideHouse && cursors.down.isDown) {
-                    p.insideHouse = true;
-                    game.time.events.add(300, function () {
-                        p.insideHouse = false;
-                    }, this);
-                    const x = (s.body.position.x / tileSize) + (((s.body.width / tileSize) - 1) / 2);
-                    const y = (s.body.position.y / tileSize) + (s.body.height / tileSize) - 2;
-                    // if(p.tint === 16776960) {
-                    //     p.scale.y = 1.08;
-                    //     p.scale.x = 1;
-                    // } else {
-                    //     p.scale.y = 1;
-                    //     p.scale.x = 1;
-                    // }
-                    p.scale.y = 1;
-                    p.scale.x = 1;
-
-                    toolsGame.mainElements.insideHouses0.add(x, y, p.insideHouseRandomNumber);
-                    toolsGame.mainElements.insideHouses1.hide(p.insideHouseRandomNumber);
-                }
-            }
-        }, null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.player.obj, toolsGame.mainElements.insideHouses1.obj, function(p,s){
-            //if(!s.keepStone) {
-                p.youCanJump = true;
-                game.time.events.add(300, function(){
-                    p.youCanJump = false;
-                },this);
-            //}
-        }, null, this);
-
-
-
-        toolsGame.mainElements.player.colisinStoneCollision=0;
-        game.physics.arcade.collide(toolsGame.mainElements.player.obj, toolsGame.mainElements.stoneBigS.obj, function(p,s){
-
-            // console.log(p.body.blocked);
-            // console.log(s.body);
-            // if(s.body.blocked.left) {
-            //     console.log("blokuje z lewej");
-            // }
-            // if(s.body.blocked.right) {
-            //     console.log("blokuje z prawej");
-            // }
-            //console.log("p:");
-            //console.log(p);
-            //console.log("s:");
-            //console.log(s);
-
-
-
-            /* push and pull stone */
-
-            if(p.body.overlapY===0) {
-
-                toolsGame.mainElements.player.colisinStoneCollision++;
-
-                if(cursors.down.isDown && !toolsGame.mainElements.stoneBigS.keepStone) {
-                    s.keepStone = true;
-                    toolsGame.mainElements.stoneBigS.keepStone = true;
-                    playerSpeedLeftRight = 50;
-                    p.youCanJump = false;
-                    if(cursors.left.isDown) {
-                        cursorDirection = 'left';
-                    } else {
-                        cursorDirection = 'right';
-                    }
-                    game.time.events.add(10,function(){
-                        playerSpeedLeftRight = 50;
-                    },this);
-                    // game.time.events.add(4000,function(){
-                    //     s.keepStone = false;
-                    //     toolsGame.mainElements.stoneBigS.keepStone = false;
-                    //     playerSpeedLeftRight = (toolsGame.mainElements.player.obj.scale.y !== 1)?300:200;
-                    // },this);
-                } else {
-
-                    s.body.immovable = true;
-                    s.body.moves = false;
-                    game.time.events.remove(p.timeStoneHeavy);
-                    p.timeStoneHeavy=game.time.events.add(300,function(){
-                        s.body.immovable = false;
-                        s.body.moves = true;
-                    },this);
-
-                    if(cursors.down.isDown && toolsGame.mainElements.stoneBigS.keepStone) {
-                        s.keepStone = false;
-                        toolsGame.mainElements.stoneBigS.keepStone = false;
-                        playerSpeedLeftRight = (toolsGame.mainElements.player.obj.tint !== 0xFFFFFF)?300:200;   //.tint = 0xFFFFFF
-                        s.body.velocity.y = -300;
-                        if(cursorDirection === 'left') {
-                            s.body.velocity.x = -300;
-                        }else {
-                            s.body.velocity.x = 300;
-                        }
-
-                    }
-                }
-
-                //if(!toolsGame.mainElements.stoneBigS.keepStone) {
-                    s.body.immovable = false;
-                    s.body.moves = true;
-
-                    s.body.gravity.x=0;
-                    if(!levelFile.blockedKeys) {
-                        if(cursors.right.isDown) {
-                            s.body.gravity.x = !toolsGame.mainElements.stoneBigS.keepStone?-8500:8500;
-                        } else if(cursors.left.isDown) {
-                            s.body.gravity.x = !toolsGame.mainElements.stoneBigS.keepStone?8500:-8500;
-                        }
-                    } else {
-                        s.body.gravity.x = 0;
-                    }
-                    game.time.events.remove(p.timeStoneHeavy);
-                    p.timeStoneHeavy=game.time.events.add(30,function(){
-                        s.body.gravity.x=0;
-                        s.body.immovable = false;
-                    },this);
-                    if(toolsGame.mainElements.player.colisinStoneCollision>1){
-                        s.body.gravity.x = 0;
-                    }
-                //}
-            }
-            /* end push stone */
-
-
-
-            if(s.quake) {
-                toolsGame.audio.quake();
-                game.camera.shake(0.005, 200, true, Phaser.Camera.SHAKE_VERTICAL);
-                s.quake=false;
-
-                //console.log(p.body.overlapY);
-                if(p.body.overlapY<0 && p.body.height) {
-                    const saveBodyHeight = p.body.height;
-                    p.body.height=0;
-                    game.time.events.add(300,function(){p.body.height=saveBodyHeight;},this);
-                    toolsGame.mainElements.player.lostLife(p,10);
-                }
-            }
-
-            if(!s.keepStone) {
-                p.youCanJump = true;
-                game.time.events.add(300, function(){
-                    p.youCanJump = false;
-                },this);
-            }
-            //toolsGame.mainElements.player.obj.body.bounce.y = 1;
+        }
+    }, this, true);
+    arcade.collide(tStoneBigS.obj, curLayer, function(s){
+        //console.log(s);
+        if(s.quake) {
+            audio.quake();
+            game.camera.shake(0.005, 200, true, Phaser.Camera.SHAKE_VERTICAL);
             s.quake=false;
+        }
+    }, null, this);
 
-            if(!s.onlyOne || facing !== 'idle') {
-                //toolsGame.mainElements.player.obj.body.bounce.y = 2;
-                toolsGame.mainElements.player.checkIfWasKilledAndOther(p);
-                s.onlyOne = true;
+    arcade.collide(tIntruders.obj, tStoneBigS.obj,function(i,s){
+
+        if(s.quake) {
+            s.quake=false;
+            // pomimo height 0 ciagle pojawia sie male opznienie
+            if(i.body.overlapY<0 && i.body.height) {
+                i.body.height=0;
+                if(!i.killing) {
+                    tIntruders.collisionIntruz(i, "total-kill");
+                }
+                i.killing=true;
             }
-            game.time.events.remove(s.fOnlyOne);
-            s.fOnlyOne=game.time.events.add(100, function(){
-                s.onlyOne = false;
+            audio.quake();
+            game.camera.shake(0.005, 200, true, Phaser.Camera.SHAKE_VERTICAL);
+        } else {
+            tIntruders.collisionBack(i);
+            s.body.moves = false;
+            s.body.immovable = true;
 
+            timeEvents.remove(s.fOnlyOne);
+            s.fOnlyOne=timeEvents.add(300, function(){
                 s.body.moves = true;
                 s.body.immovable = false;
                 s.body.velocity.x = 0;
                 s.body.velocity.y = 0;
-
             }, this);
+        }
+    }, null, this);
+    arcade.collide(tGun.bullets.obj, tStoneBigS.obj,function(b,s){
+        tMain.explosion.add(b.body.position.x/tileSize, b.body.position.y/tileSize);
+        tStoneBigExplosion.add(s.body.position.x/tileSize, s.body.position.y/tileSize);
+        s.kill();
+        b.kill();
+    }, null, this);
 
-        }, null, this);
-        //console.log(toolsGame.mainElements.player.colisinStoneCollision);
+    //arcade.collide(tStoneBigS.obj, curLayer);
 
-        game.physics.arcade.collide(toolsGame.mainElements.stoneBigS.obj, toolsGame.mainElements.stoneBigS.obj, function(s1,s2){
-            //po 50ms kamien sie zatrzyma
-            game.time.events.remove(s1.timeCheck1);
-            s1.timeCheck1 = game.time.events.add(50,function(){
-                s1.body.velocity.x = 0;
-            },this);
-            game.time.events.remove(s2.timeCheck1);
-            s2.timeCheck1 = game.time.events.add(50,function(){
-                s2.body.velocity.x = 0;
-            },this);
-        });
+    arcade.overlap(tGun.bullets.obj, tInsideHouses1.obj,function(b){
+        tMain.explosion.add(b.body.position.x/tileSize, b.body.position.y/tileSize);
+        b.kill();
+    }, null, this);
 
-        /* end big stone */
+    // cccc
+    arcade.overlap(tPlayer.obj, tInsideHouses0.obj, function(p,s){
+        //console.log((s.body.position.x/tileSize) + Math.ceil((s.body.width/tileSize)/2) - 1);    //overlap
+        //console.log(s.randomString);
+        if(p.body.position.x > s.body.position.x+40 && p.body.position.x < s.body.position.x+130 && p.body.position.y > s.body.position.y+100) {
+            toolsGame.addPoint(s.x+45,s.y+100,'youCanEnter'+tPlayer.numberLifes,'You can come in');
+            if (!p.insideHouse && cDown.isDown) {
+                p.insideHouse = true;
+                //alert(s.randomString);
+                p.insideHouseRandomNumber = s.randomString;
 
+                timeEvents.add(300, function () {
+                    p.insideHouse = false;
+                }, this);
+                const x = (s.body.position.x / tileSize) + (((s.body.width / tileSize) - 1) / 2);
+                const y = (s.body.position.y / tileSize) + (s.body.height / tileSize) - 2;
+                p.body.position.y = y * tileSize - p.body.height + 20;
+                p.scale.y = .8;
+                p.scale.x = .8;
+                // tInsideHouses2.add(x, y);
 
-        game.physics.arcade.collide(toolsGame.mainElements.Lifes.obj, layer);
+                tInsideHouses1.add(x, y, p.insideHouseRandomNumber);
+                tInsideHouses0.hide(p.insideHouseRandomNumber);
 
-        game.physics.arcade.collide(toolsGame.mainElements.player.gun.bullets.obj, layer);
+            }
+        }
+    }, null, this);
 
-        game.physics.arcade.overlap(toolsGame.mainElements.player.gun.bullets.obj, toolsGame.mainElements.intruders.obj, function(bullet, intruz){
-            //jden strzal wywoluje jedna funkcje...
-            if(intruz.type === 4 || intruz.type === 5 || intruz.type === 7) {
-                if(!intruz.killing) {
-                    toolsGame.mainElements.intruders.collisionIntruz(intruz, "total-kill");
-                }
-                intruz.killing=true;
-            } else {
-                toolsGame.audio.screamIntruder(.05);
-                //console.log(intruz.body.velocity.x);
+    arcade.overlap(tPlayer.obj, tInsideHouses1.obj, function(p,s){
 
-                // evry shot makes intruz jump
-                intruz.deactiveVelocity = bullet.direction;
-                if(!intruz.firstShoot) {
-                    if(intruz.type === 6) {
-                        intruz.firstShoot=0;
-                    }
-                    else {
-                        intruz.firstShoot=1;
-                        intruz.randomSpeed = intruz.randomSpeed/2;
-                    }
+        if(p.body.position.x > s.body.position.x+40 && p.body.position.x < s.body.position.x+130 && p.body.position.y > s.body.position.y+100) {
+            toolsGame.addPoint(s.x+35,s.y+100,'youCanEnter'+tPlayer.numberLifes,'You can go outside');
+            if (!p.insideHouse && cDown.isDown) {
+                p.insideHouse = true;
+                timeEvents.add(300, function () {
+                    p.insideHouse = false;
+                }, this);
+                const x = (s.body.position.x / tileSize) + (((s.body.width / tileSize) - 1) / 2);
+                const y = (s.body.position.y / tileSize) + (s.body.height / tileSize) - 2;
+                p.scale.y = 1;
+                p.scale.x = 1;
 
-                    // blood
-                    game.time.events.add(50, function(){
-                        toolsGame.mainElements.splashs.add(
-                            intruz.body.position.x/tileSize,
-                            bullet.body.position.y/tileSize,
-                            'splash-water-gray',
-                            'blood'
-                        );
-                    }, this);
+                tInsideHouses0.add(x, y, p.insideHouseRandomNumber);
+                tInsideHouses1.hide(p.insideHouseRandomNumber);
+            }
+        }
+    }, null, this);
 
-                    game.time.events.add(50, function(){
-                        if(intruz.randomMove === 'intruzRight') {
-                            intruz.randomMove = 'intrudersdleLeft';
-                        } else {
-                            intruz.randomMove = 'intrudersdleRight';
-                        }
-                    },this);
-                    game.time.events.add(600, function(){
-                        if(intruz.randomMove === 'intrudersdleLeft') {
-                            intruz.randomMove = 'intruzRight';
-                        } else {
-                            intruz.randomMove = 'intruzLeft';
-                        }
-                        intruz.deactiveVelocity = false;
-                    },this);
+    arcade.collide(tPlayer.obj, tInsideHouses1.obj, function(p){
+        //if(!s.keepStone) {
+        p.youCanJump = true;
+        timeEvents.add(300, function(){
+            p.youCanJump = false;
+        },this);
+        //}
+    }, null, this);
+
+    tPlayer.colisinStoneCollision=0;
+    arcade.collide(tPlayer.obj, tStoneBigS.obj, function(p,s){
+        /* push and pull stone */
+        if(p.body.overlapY===0) {
+
+            tPlayer.colisinStoneCollision++;
+
+            if(cDown.isDown && !tStoneBigS.keepStone) {
+                s.keepStone = true;
+                tStoneBigS.keepStone = true;
+                playerSpeedLeftRight = 50;
+                p.youCanJump = false;
+                if(cLeft.isDown) {
+                    cursorDirection = 'left';
                 } else {
-                    intruz.randomMove = 'intruzLeft';
-                    if(!intruz.killing) {
-                        toolsGame.mainElements.intruders.collisionIntruz(intruz, "total-kill");
-                        intruz.killing=true;
+                    cursorDirection = 'right';
+                }
+                timeEvents.add(10,function(){
+                    playerSpeedLeftRight = 50;
+                },this);
+            } else {
+                s.body.immovable = true;
+                s.body.moves = false;
+                timeEvents.remove(p.timeStoneHeavy);
+                p.timeStoneHeavy=timeEvents.add(300,function(){
+                    s.body.immovable = false;
+                    s.body.moves = true;
+                },this);
+
+                if(cDown.isDown && tStoneBigS.keepStone) {
+                    s.keepStone = false;
+                    tStoneBigS.keepStone = false;
+                    playerSpeedLeftRight = (tPlayer.obj.tint !== 0xFFFFFF)?300:200;   //.tint = 0xFFFFFF
+                    s.body.velocity.y = -300;
+                    if(cursorDirection === 'left') {
+                        s.body.velocity.x = -300;
+                    }else {
+                        s.body.velocity.x = 300;
                     }
+
                 }
             }
+            s.body.immovable = false;
+            s.body.moves = true;
 
-            toolsGame.mainElements.explosion.add(bullet.body.position.x/tileSize, bullet.body.position.y/tileSize);
-            bullet.kill();
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.gun.bullets.obj, layer, function(bullet, layer){
-            if(bullet.body.blocked.right || bullet.body.blocked.left)
-            {
-                bullet.kill();
+            s.body.gravity.x=0;
+            if(!levelFile.blockedKeys) {
+                if(cRight.isDown) {
+                    s.body.gravity.x = !tStoneBigS.keepStone?-8500:8500;
+                } else if(cLeft.isDown) {
+                    s.body.gravity.x = !tStoneBigS.keepStone?8500:-8500;
+                }
+            } else {
+                s.body.gravity.x = 0;
             }
-        }, null, this);
+            timeEvents.remove(p.timeStoneHeavy);
+            p.timeStoneHeavy=timeEvents.add(30,function(){
+                s.body.gravity.x=0;
+                s.body.immovable = false;
+            },this);
+            if(tPlayer.colisinStoneCollision>1){
+                s.body.gravity.x = 0;
+            }
+        }
+        /* end push stone */
 
-        if(toolsGame.mainElements.player.obj.gForceWater) {
-            toolsGame.mainElements.player.obj.body.gravity.y = 0;
-            toolsGame.mainElements.player.obj.gForceWater = false;
+        if(s.quake) {
+            audio.quake();
+            game.camera.shake(0.005, 200, true, Phaser.Camera.SHAKE_VERTICAL);
+            s.quake=false;
+
+            //console.log(p.body.overlapY);
+            if(p.body.overlapY<0 && p.body.height) {
+                const saveBodyHeight = p.body.height;
+                p.body.height=0;
+                timeEvents.add(300,function(){p.body.height=saveBodyHeight;},this);
+                tPlayer.lostLife(p,10);
+            }
+        }
+
+        if(!s.keepStone) {
+            p.youCanJump = true;
+            timeEvents.add(300, function(){
+                p.youCanJump = false;
+            },this);
+        }
+        //tPlayer.obj.body.bounce.y = 1;
+        s.quake=false;
+
+        if(!s.onlyOne || facing !== 'idle') {
+            //tPlayer.obj.body.bounce.y = 2;
+            tPlayer.checkIfWasKilledAndOther(p);
+            s.onlyOne = true;
+        }
+        timeEvents.remove(s.fOnlyOne);
+        s.fOnlyOne=timeEvents.add(100, function(){
+            s.onlyOne = false;
+
+            s.body.moves = true;
+            s.body.immovable = false;
+            s.body.velocity.x = 0;
+            s.body.velocity.y = 0;
+
+        }, this);
+
+    }, null, this);
+
+    arcade.collide(tStoneBigS.obj, tStoneBigS.obj, function(s1,s2){
+        //po 50ms kamien sie zatrzyma
+        timeEvents.remove(s1.timeCheck1);
+        s1.timeCheck1 = timeEvents.add(50,function(){
+            s1.body.velocity.x = 0;
+        },this);
+        timeEvents.remove(s2.timeCheck1);
+        s2.timeCheck1 = timeEvents.add(50,function(){
+            s2.body.velocity.x = 0;
+        },this);
+    });
+    /* end big stone */
+
+
+    arcade.collide(tLifes.obj, curLayer);
+
+    arcade.collide(tGun.bullets.obj, curLayer);
+
+    arcade.overlap(tGun.bullets.obj, tIntruders.obj, function(bullet, intruz){
+        //jden strzal wywoluje jedna funkcje...
+        if(intruz.type === 4 || intruz.type === 5 || intruz.type === 7) {
+            if(!intruz.killing) {
+                tIntruders.collisionIntruz(intruz, "total-kill");
+            }
+            intruz.killing=true;
+        } else {
+            audio.screamIntruder(.05);
+            //console.log(intruz.body.velocity.x);
+
+            // evry shot makes intruz jump
+            intruz.deactiveVelocity = bullet.direction;
+            if(!intruz.firstShoot) {
+                if(intruz.type === 6) {
+                    intruz.firstShoot=0;
+                }
+                else {
+                    intruz.firstShoot=1;
+                    intruz.randomSpeed = intruz.randomSpeed/2;
+                }
+
+                // blood
+                timeEvents.add(50, function(){
+                    tSplashs.add(
+                        intruz.body.position.x/tileSize,
+                        bullet.body.position.y/tileSize,
+                        'splash-water-gray',
+                        'blood'
+                    );
+                }, this);
+
+                timeEvents.add(50, function(){
+                    if(intruz.randomMove === 'intruzRight') {
+                        intruz.randomMove = 'intrudersdleLeft';
+                    } else {
+                        intruz.randomMove = 'intrudersdleRight';
+                    }
+                },this);
+                timeEvents.add(600, function(){
+                    if(intruz.randomMove === 'intrudersdleLeft') {
+                        intruz.randomMove = 'intruzRight';
+                    } else {
+                        intruz.randomMove = 'intruzLeft';
+                    }
+                    intruz.deactiveVelocity = false;
+                },this);
+            } else {
+                intruz.randomMove = 'intruzLeft';
+                if(!intruz.killing) {
+                    tIntruders.collisionIntruz(intruz, "total-kill");
+                    intruz.killing=true;
+                }
+            }
+        }
+
+        tMain.explosion.add(bullet.body.position.x/tileSize, bullet.body.position.y/tileSize);
+        bullet.kill();
+    }, null, this);
+
+    arcade.overlap(tGun.bullets.obj, curLayer, function(bullet){
+        if(bullet.body.blocked.right || bullet.body.blocked.left)
+        {
+            bullet.kill();
+        }
+    }, null, this);
+
+    if(tPlayer.obj.gForceWater) {
+        tPlayer.obj.body.gravity.y = 0;
+        tPlayer.obj.gForceWater = false;
+    }
+
+
+    tFireBs.obj.forEach(function(f){
+        if(!f.startPositionSaveY){
+            f.startPositionSaveY = Math.ceil(f.body.position.y/tileSize);
+        }
+
+        f.currentPositionY = Math.ceil(f.body.position.y/tileSize);
+        if(timerTotal === 0) {
+            f.start = true;
+        }
+
+        // detection activate firebs
+        if(tPlayer.detectionHoldOnObject(f,2)){
+            f.active = true;
+            if(f.activeWait) {
+                // setTime to Phaser
+                timeEvents.add(randomBetween(0,3)*1000, function(){
+                    f.fall=false;
+                    f.alpha=1;
+                }, this);
+                f.activeWait=false;
+            }
+        } else {
+            f.active = false;
         }
 
 
-        toolsGame.mainElements.firebs.obj.forEach(function(f){
-            //console.log(toolsGame.mainElements.player.obj.position.x);
-            //console.log(f.position.x);
-            //console.log(game.width);
-
-
-
-            if(!f.startPositionSaveY){
-                f.startPositionSaveY = Math.ceil(f.body.position.y/tileSize);
-            }
-
-            f.currentPositionY = Math.ceil(f.body.position.y/tileSize);
-            //console.log(f.startPositionSaveY - f.currentPositionY);
-
-
-            //if(timerTotal == f.randomStart) {
-            if(timerTotal == 0) {
-                f.start = true;
-            }
-
-            // detection activate firebs
-            if(toolsGame.mainElements.player.detectionHoldOnObject(f,2)){
-                f.active = true;
-                if(f.activeWait) {
-                    // setTime to Phaser
-                    game.time.events.add(randomBetween(0,3)*1000, function(){
-                        f.fall=false;
-                        f.alpha=1;
-                    }, this);
-                    // setTimeout(function(){
-                    //     f.fall=false;
-                    //     f.alpha=1;
-                    // },randomBetween(0,3)*1000);
-                    f.activeWait=false;
+        if(f.start) {
+            if(!f.fall) {
+                if(f.startPositionSaveY-f.currentPositionY === 0) {
+                    // unosi sie
+                    if(!f.typeFire) {
+                        f.animations.play('run1', 10, true);
+                    }
+                    f.alpha = 1;
+                    f.body.allowGravity = false;
+                    f.body.velocity.y = -600;
+                } else if(f.startPositionSaveY-f.currentPositionY === 4) {
+                    f.body.allowGravity = true;
+                } else if(f.startPositionSaveY-f.currentPositionY === 16) {
+                    // opada
+                    if(!f.typeFire) {
+                        f.animations.play('run2', 10, true);
+                    }
+                    f.body.allowGravity = true;
+                    f.body.velocity.y = 0;
+                    f.fall = true;
+                    f.t=false;
                 }
             } else {
-                f.active = false;
-            }
+                if(f.startPositionSaveY-f.currentPositionY === 0 && !f.t) {
+                    // zatrzymuje sie
+                    f.body.velocity.y = 0;
+                    f.body.allowGravity = false;
+                    f.t=true;
+                    f.alpha=0;
 
-
-            if(f.start) {
-                if(!f.fall) {
-                    if(f.startPositionSaveY-f.currentPositionY === 0) {
-                        // unosi sie
-                        if(!f.typeFire) {
-                            f.animations.play('run1', 10, true);
+                    // detection activate firebs
+                    timeEvents.add(randomBetween(1,6)*1000, function(){
+                        if(f.active) {
+                            f.fall=false;
+                            f.alpha=1;
+                        } else {
+                            f.activeWait=true;
                         }
-                        f.alpha = 1;
-                        f.body.allowGravity = false;
-                        f.body.velocity.y = -600;
-                    } else if(f.startPositionSaveY-f.currentPositionY === 4) {
-                        f.body.allowGravity = true;
-                    } else if(f.startPositionSaveY-f.currentPositionY === 16) {
-                        // opada
-                        if(!f.typeFire) {
-                            f.animations.play('run2', 10, true);
-                        }
-                        f.body.allowGravity = true;
-                        f.body.velocity.y = 0;
-                        f.fall = true;
-                        f.t=false;
-                    }
-                } else {
-                    if(f.startPositionSaveY-f.currentPositionY === 0 && !f.t) {
-                        // zatrzymuje sie
-                        f.body.velocity.y = 0;
-                        f.body.allowGravity = false;
-                        f.t=true;
-                        f.alpha=0;
-
-                        // detection activate firebs
-                        game.time.events.add(randomBetween(1,6)*1000, function(){
-                            if(f.active) {
-                                f.fall=false;
-                                f.alpha=1;
-                            } else {
-                                f.activeWait=true;
-                            }
-                            //console.log("aktywuj ponownie");
-                        }, this);
-
-                        // setTimeout(function(){
-                        //     if(f.active) {
-                        //         f.fall=false;
-                        //         f.alpha=1;
-                        //     } else {
-                        //         f.activeWait=true;
-                        //     }
-                        //     //console.log("aktywuj ponownie");
-                        // },randomBetween(1,6)*1000);
-                    }
+                    }, this);
                 }
-
             }
-        }, this, true);
-        game.physics.arcade.overlap(toolsGame.mainElements.firebs.obj, toolsGame.mainElements.waters.obj, function(f,w){
-            //console.log(f.randomStart);
 
-            // clearTimeout(f.gForceWaterTimer);
-            // f.gForceWaterTimer = setTimeout(function(){
-            //     f.gForceWaterOnlyeOne = false;
-            // },100);
+        }
+    }, this, true);
+    arcade.overlap(tFireBs.obj, tWaters.obj, function(f,w){
 
-            game.time.events.remove(f.gForceWaterTimer);
-            f.gForceWaterTimer = game.time.events.add(100, function(){
-                f.gForceWaterOnlyeOne = false;
+        timeEvents.remove(f.gForceWaterTimer);
+        f.gForceWaterTimer = timeEvents.add(100, function(){
+            f.gForceWaterOnlyeOne = false;
+        }, this);
+
+
+        if(!f.gForceWaterOnlyeOne) {
+            tSplashs.add((f.body.position.x+(f.body.width/2))/tileSize,((f.body.position.y+(f.typeFire?(-16):8))/tileSize),(w.type==='water-red')?'splash-water-red':false);
+            f.gForceWaterOnlyeOne = true;
+        }
+    }, null, this);
+
+
+    arcade.overlap(tStoneBigS.obj, tWaters.obj, function(s,w){
+        timeEvents.remove(s.gForceWaterTimer);
+        s.gForceWaterTimer = timeEvents.add(100, function(){
+            s.gForceWaterOnlyeOne = false;
+        }, this);
+        if(!s.gForceWaterOnlyeOne) {
+            tSplashs.add((s.body.position.x+(s.body.width/2))/tileSize,((s.body.position.y+(s.typeFire?(-16):8))/tileSize),(w.type==='water-red')?'splash-water-red':false);
+            s.gForceWaterOnlyeOne = true;
+        }
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tFireBs.obj, function(p,f){
+        if(f.alpha===1) {
+            //console.log("collision with player");
+            tPlayer.lostLife(p);
+        }
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tWaters.obj, function(p,w){
+        p.body.gravity.y = -525;
+
+        tPlayer.checkIfWasKilledAndOther(p,'water');
+        timeEvents.remove(p.gForceWaterTimer);
+        p.gForceWaterTimer = timeEvents.add(100, function(){
+            p.gForceWaterOnlyeOne = false;
+        }, this);
+
+
+        if(w.type!=="water-red") {
+            timeEvents.remove(p.waterYSaveTime);
+            p.waterYSaveTime = timeEvents.add(300, function(){
+                p.waterYSave = false;
             }, this);
 
 
-            if(!f.gForceWaterOnlyeOne) {
-                toolsGame.mainElements.splashs.add((f.body.position.x+(f.body.width/2))/tileSize,((f.body.position.y+(f.typeFire?(-16):8))/tileSize),(w.type==='water-red')?'splash-water-red':false);
-                f.gForceWaterOnlyeOne = true;
+            if(!p.waterYSave) {
+                p.waterYSave = Math.ceil(w.body.position.y/tileSize);
             }
-        }, null, this);
-
-
-        game.physics.arcade.overlap(toolsGame.mainElements.stoneBigS.obj, toolsGame.mainElements.waters.obj, function(s,w){
-            game.time.events.remove(s.gForceWaterTimer);
-            s.gForceWaterTimer = game.time.events.add(100, function(){
-                s.gForceWaterOnlyeOne = false;
-            }, this);
-            if(!s.gForceWaterOnlyeOne) {
-                toolsGame.mainElements.splashs.add((s.body.position.x+(s.body.width/2))/tileSize,((s.body.position.y+(s.typeFire?(-16):8))/tileSize),(w.type==='water-red')?'splash-water-red':false);
-                s.gForceWaterOnlyeOne = true;
-            }
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.firebs.obj, function(p,f){
-            if(f.alpha===1) {
-                //console.log("collision with player");
-                toolsGame.mainElements.player.lostLife(p);
-            }
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.waters.obj, function(p,w){
-            p.body.gravity.y = -525;
-
-            toolsGame.mainElements.player.checkIfWasKilledAndOther(p,'water');
-            // if(jumpKillF) {
-            //     game.camera.shake(0.02, 250, true, Phaser.Camera.SHAKE_VERTICAL);
-            //     jumpKillF = false;
-            //     game.time.events.add(300,function(){
-            //         jumpKillF = true;
-            //     },this);
-            // }
-            //p.t1=true;
-            //p.onGround = false;
-            // clearTimeout(p.gForceWaterTimer);
-            // p.gForceWaterTimer = setTimeout(function(){
-            //     p.gForceWaterOnlyeOne = false;
-            // },100);
-
-            game.time.events.remove(p.gForceWaterTimer);
-            p.gForceWaterTimer = game.time.events.add(100, function(){
-                p.gForceWaterOnlyeOne = false;
-            }, this);
-
-
-            if(w.type!=="water-red") {
-
-                //console.log("p: " + p.body.position.x);
-                // clearTimeout(p.waterYSaveTime);
-                // p.waterYSaveTime = setTimeout(function () {
-                //     p.waterYSave = false;
-                // },300);
-
-                game.time.events.remove(p.waterYSaveTime);
-                p.waterYSaveTime = game.time.events.add(300, function(){
-                    p.waterYSave = false;
-                }, this);
-
-
-                if(!p.waterYSave) {
-                    p.waterYSave = Math.ceil(w.body.position.y/tileSize);
+            //console.log(p.waterYSave - Math.ceil(p.body.position.y/tileSize));
+            if(p.waterYSave - Math.ceil(p.body.position.y/tileSize) < 2) {
+                if(!p.iterWater) {
+                    p.iterWater=1;
                 }
-                //console.log(p.waterYSave - Math.ceil(p.body.position.y/tileSize));
-                if(p.waterYSave - Math.ceil(p.body.position.y/tileSize) < 2) {
-                    if(!p.iterWater) {
-                        p.iterWater=1;
-                    }
-                    p.iterWater++;
-                    //console.log(w.type);
-                    if(p.iterWater >= 250){
-                        //console.log("kill");
-                        toolsGame.mainElements.player.lostLife(p);
-                        p.iterWater = false;
-                    }
-                } else {
+                p.iterWater++;
+                //console.log(w.type);
+                if(p.iterWater >= 250){
+                    //console.log("kill");
+                    tPlayer.lostLife(p);
                     p.iterWater = false;
                 }
             } else {
-                //console.log("kill");
-                toolsGame.mainElements.player.lostLife(p,10);
-                //
+                p.iterWater = false;
             }
+        } else {
+            tPlayer.lostLife(p,10);
+        }
 
+        if(!p.gForceWaterOnlyeOne) {
+            let typeSplash=false;
 
-            //console.log(p.animations.currentAnim.name);
-            if(!p.gForceWaterOnlyeOne) {
-                //console.log(p.body.position.x + " - " + p.body.position.y);
-                //console.log(p.body);
-                //console.log(p.animations.currentAnim.name);
-                let typeSplash=false;
-                // toolsGame.audio.splash();
-
-                if(w.type==='water-red') {
-                    typeSplash='splash-water-red';
-                }
-                if(p.animations.currentAnim.name==="left" || p.animations.currentAnim.name==="jump-left") {
-                    toolsGame.mainElements.splashs.add(((p.body.position.x+(p.body.width/2))/tileSize)-(32/tileSize),((p.body.position.y+32)/tileSize),typeSplash);
-                } else if(p.animations.currentAnim.name==="right" || p.animations.currentAnim.name==="jump-right") {
-                    toolsGame.mainElements.splashs.add(((p.body.position.x+(p.body.width/2))/tileSize)+(32/tileSize),((p.body.position.y+32)/tileSize),typeSplash);
-                } else {
-                    toolsGame.mainElements.splashs.add((p.body.position.x+(p.body.width/2))/tileSize,((p.body.position.y+28)/tileSize),typeSplash);
-                }
-                p.gForceWaterOnlyeOne = true;
+            if(w.type==='water-red') {
+                typeSplash='splash-water-red';
             }
-            p.gForceWater = true;
-
-            if(cursors.left.isDown || cursors.right.isDown) {
-                if(!p.delayWater) {
-                    p.gForceWaterOnlyeOne = false;
-                    p.delayWater = true;
-                }
-                if(timeLoop % 15 == 0) {
-                    p.delayWater = false;
-                }
-            }
-
-        }, null, this);
-
-        toolsGame.mainElements.waters.obj.forEach(function(w){
-            if(toolsGame.mainElements.player.detectionHoldOnObject(w,1)){
-                //console.log(w.alpha);
-                if(!w.alpha) {
-                    w.alpha = 0.7;
-                }
-                //console.log("ładowANIE WOdy");
+            if(p.animations.currentAnim.name==="left" || p.animations.currentAnim.name==="jump-left") {
+                tSplashs.add(((p.body.position.x+(p.body.width/2))/tileSize)-(32/tileSize),((p.body.position.y+32)/tileSize),typeSplash);
+            } else if(p.animations.currentAnim.name==="right" || p.animations.currentAnim.name==="jump-right") {
+                tSplashs.add(((p.body.position.x+(p.body.width/2))/tileSize)+(32/tileSize),((p.body.position.y+32)/tileSize),typeSplash);
             } else {
-                if(w.alpha) {
-                    w.alpha=0;
+                tSplashs.add((p.body.position.x+(p.body.width/2))/tileSize,((p.body.position.y+28)/tileSize),typeSplash);
+            }
+            p.gForceWaterOnlyeOne = true;
+        }
+        p.gForceWater = true;
+
+        if(cLeft.isDown || cRight.isDown) {
+            if(!p.delayWater) {
+                p.gForceWaterOnlyeOne = false;
+                p.delayWater = true;
+            }
+            if(timeLoop % 15 === 0) {
+                p.delayWater = false;
+            }
+        }
+
+    }, null, this);
+
+    tWaters.obj.forEach(function(w){
+        if(tPlayer.detectionHoldOnObject(w,1)){
+            //console.log(w.alpha);
+            if(!w.alpha) {
+                w.alpha = 0.7;
+            }
+            //console.log("ładowANIE WOdy");
+        } else {
+            if(w.alpha) {
+                w.alpha=0;
+            }
+        }
+    }, this, true);
+
+    tIntruders.obj.forEach(function(intruz){
+        if(intruz.type < 4) {
+            intruz.body.offset.x = 8;
+            intruz.body.width = 32;
+            //console.log("test");
+        }
+
+        if(intruz.gForceWater) {
+            intruz.body.gravity.y = 0;
+            intruz.gForceWater = false;
+        }
+
+        if(intruz.type === 4) {
+            intruz.body.offset.y=6;
+            intruz.body.height = 26;
+        } else if(intruz.type === 5 || intruz.type === 7) {
+            // intruz.body.velocity.y = -intruz.randomSpeed/2;
+
+            intruz.body.offset.y=16;
+            intruz.body.height = 52;
+            if(!intruz.jumpToFly) {
+                if(timeLoop >= 0 && timeLoop < 60) {
+                    intruz.body.velocity.y = -50;
+                }
+                else {
+                    intruz.body.velocity.y = 25;
                 }
             }
-        }, this, true);
+        }
 
-        toolsGame.mainElements.intruders.obj.forEach(function(intruz){
-            if(intruz.type < 4) {
-                intruz.body.offset.x = 8;
-                intruz.body.width = 32;
-                //console.log("test");
-            }
+        // warunek jesli intruz dotyka dna mapy
+        if(intruz.body.y+intruz.height === curMap.height*curMap.tileHeight) {
+            if(!intruz.killing) tIntruders.collisionIntruz(intruz,"total-kill");
+            intruz.killing=true;
+        }
 
-            if(intruz.gForceWater) {
-                intruz.body.gravity.y = 0;
-                intruz.gForceWater = false;
-            }
-
-            if(intruz.type === 4) {
-                intruz.body.offset.y=6;
-                intruz.body.height = 26;
-            } else if(intruz.type === 5 || intruz.type === 7) {
-                // intruz.body.velocity.y = -intruz.randomSpeed/2;
-
-                intruz.body.offset.y=16;
-                intruz.body.height = 52;
-                if(!intruz.jumpToFly) {
-                    if(timeLoop >= 0 && timeLoop < 60) {
-                        intruz.body.velocity.y = -50;
-                    }
-                    else {
-                        intruz.body.velocity.y = 25;
-                    }
-                }
-                //console.log(timeLoop);
-
-                // intruz.timeFly = game.time.events.add(2000, function () {
-                //     game.time.events.remove(intruz.timeFly);
-                //     intruz.body.velocity.y = -50;
-                //
-                // },this);
-
-            }
-
-            // warunek jesli intruz dotyka dna mapy
-            if(intruz.body.y+intruz.height === map.height*map.tileHeight) {
-                if(!intruz.killing) toolsGame.mainElements.intruders.collisionIntruz(intruz,"total-kill");
-                intruz.killing=true;
-            }
-
-            if(intruz.type === 6) {
-                if(intruz.randomMove === 'intrudersdleRight' || intruz.randomMove === 'intrudersdleLeft') {
-                    //console.log("player position:");
-                    //console.log(toolsGame.mainElements.player.obj.position.x);
-                    //console.log("intruder position");
-                    //console.log(intruz.position.x);
-                    //console.log(intruz.area);
-                    if(intruz.position.x > toolsGame.mainElements.player.obj.position.x-128 &&
-                        intruz.position.x < toolsGame.mainElements.player.obj.position.x+64) {
-
-                        //console.log("xxxx");
-
-                        if(intruz.randomMove === 'intrudersdleRight') intruz.randomMove = 'intruzRight';
-                        else if(intruz.randomMove === 'intrudersdleLeft') intruz.randomMove = 'intruzLeft';
-
-                        // intruz.area = true;
-                        // game.time.events.remove(intruz.timeArea);
-                        // intruz.timeArea = game.time.events.add(600,function(){
-                        //     intruz.area = false;
-                        // },this);
-
-                    } else {
-                        //intruz.area = false;
-                    }
-                }
-
-            }
-        }, this, true);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.intruders.obj, toolsGame.mainElements.waters.obj, function(i,w){
-            if(i.active) {
-                i.body.gravity.y = -525;
-
-                // clearTimeout(i.gForceWaterTimer);
-                // i.gForceWaterTimer = setTimeout(function(){
-                //     i.gForceWaterOnlyeOne = false;
-                // },100);
-
-                game.time.events.remove(i.gForceWaterTimer);
-                i.gForceWaterTimer = game.time.events.add(100, function(){
-                    i.gForceWaterOnlyeOne = false;
-                }, this);
-
-                if(!i.gForceWaterOnlyeOne) {
-                    //console.log(i.body.position.x + " - " + i.body.position.y);
-                    //console.log(i.body);
-                    if(i.type===4) {
-                        i.move_y = -33/tileSize;
-                    } else {
-                        i.move_y = 0;
-                    }
-                    let typeSplash=false;
-                    if(w.type==='water-red') {
-                        if(!i.killed) {
-                            toolsGame.mainElements.intruders.collisionIntruz(i, "total-kill");
-                            i.killed = true;
-                        }
-                        typeSplash='splash-water-red';
-                    }
-                    if(i.animations.currentAnim.name==="left") {
-                        toolsGame.mainElements.splashs.add(((i.body.position.x+(i.body.width/2))/tileSize)-(32/tileSize),i.move_y + ((i.body.position.y+32)/tileSize),typeSplash);
-                    } else if(i.animations.currentAnim.name==="right") {
-                        toolsGame.mainElements.splashs.add(((i.body.position.x+(i.body.width/2))/tileSize)+(32/tileSize),i.move_y + ((i.body.position.y+32)/tileSize),typeSplash);
-                    } else {
-                        toolsGame.mainElements.splashs.add((i.body.position.x+(i.body.width/2))/tileSize,i.move_y + ((i.body.position.y+28)/tileSize),typeSplash);
-                    }
-
-                    //toolsGame.mainElements.splashs.add((i.body.position.x+(i.body.width/2))/tileSize,((i.body.position.y+28)/tileSize));
-                    i.gForceWaterOnlyeOne = true;
-                }
-                i.gForceWater = true;
-
-                //console.log(i.animations.currentAnim.name);
-                if(i.animations.currentAnim.name=='right' || i.animations.currentAnim.name=='left') {
-                    if(!i.delayWater) {
-                        i.gForceWaterOnlyeOne = false;
-                        i.delayWater = true;
-                    }
-                    if(timeLoop % 15 == 0) {
-                        i.delayWater = false;
-                    }
+        if(intruz.type === 6) {
+            if(intruz.randomMove === 'intrudersdleRight' || intruz.randomMove === 'intrudersdleLeft') {
+                if(intruz.position.x > tPlayer.obj.position.x-128 &&
+                    intruz.position.x < tPlayer.obj.position.x+64) {
+                    if(intruz.randomMove === 'intrudersdleRight') intruz.randomMove = 'intruzRight';
+                    else if(intruz.randomMove === 'intrudersdleLeft') intruz.randomMove = 'intruzLeft';
                 }
             }
-        }, null, this);
 
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.coins.obj, function(player, coin){
-            toolsGame.audio.coin();
-            toolsGame.mainElements.player.numberCoins++;
-            toolsGame.mainElements.player.numberCoinsLevel++;
+        }
+    }, this, true);
 
-            toolsGame.mainElements.player.numberCoinsLevelProcent = Math.ceil(100*toolsGame.mainElements.player.numberCoinsLevel/oneHP);
-            //console.log("100*" + toolsGame.mainElements.player.numberCoinsLevel + " / " + oneHP);
-            coin.kill();
-            toolsGame.windows.boxTopMenu.f=false;
+    arcade.overlap(tIntruders.obj, tWaters.obj, function(i,w){
+        if(i.active) {
+            i.body.gravity.y = -525;
 
-            //console.log(player.x);
-
-            //toolsGame.mainElements.coins.add(player.x/tileSize, player.y/tileSize);
-
-            // only animation text
-            toolsGame.addPoint(coin.x,player.y,'addPointGold'+toolsGame.mainElements.player.numberCoins,'+1 gold');
-
-        }, null, this);
-
-        // game.physics.arcade.overlap(toolsGame.mainElements.intruders.obj, toolsGame.mainElements.coins.obj, function(player, coin){
-        //     coin.kill();
-        // }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.Lifes.obj, function(player, Life){
-            toolsGame.mainElements.player.numberMainLifes++;
-            toolsGame.audio.life();
-            player.body.velocity.y = -300;
-            game.time.events.remove(toolsGame.mainElements.player.timeLife);
-
-            //this.obj.tint = 16776960;
-            //if(player.scale.y === 1) {
-            if(player.tint === 0xFFFFFF){
-                toolsGame.mainElements.player.scale('increase');
-                toolsGame.mainElements.player.timeLife = game.time.events.add(30000, function(){
-                    if(player.tint === 16776960) {
-                        toolsGame.mainElements.player.scale('restart');
-                    }
-                }, this);
-            }
-
-            //player.moreJump = true;
-
-            // setTimeout(function(){
-            //     toolsGame.audio.life();
-            //     setTimeout(function(){
-            //         toolsGame.audio.life();
-            //     },200);
-            // },200);
-
-            game.time.events.add(200, function(){
-                toolsGame.audio.life();
-                game.time.events.add(200, function(){
-                    toolsGame.audio.life();
-                }, this);
+            timeEvents.remove(i.gForceWaterTimer);
+            i.gForceWaterTimer = timeEvents.add(100, function(){
+                i.gForceWaterOnlyeOne = false;
             }, this);
 
-            Life.kill();
-            toolsGame.windows.boxTopMenu.f=false;
-            toolsGame.addPoint(Life.x,player.y,'addPointFullLife'+toolsGame.mainElements.player.numberMainLifes,'+1 full life');
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.LifeSingleS.obj, function(player, LifeSingle){
-            if(toolsGame.mainElements.player.numberLifes===amountLife) {
-                // toolsGame.mainElements.player.numberMainLifes++;
-                toolsGame.addPoint(LifeSingle.x,player.y,'addPointLife'+toolsGame.mainElements.player.numberLifes,'You have a full bag');
-            } else {
-                toolsGame.mainElements.player.numberLifes++;
-                toolsGame.audio.life();
-                LifeSingle.kill();
-                toolsGame.windows.boxTopMenu.f=false;
-                toolsGame.addPoint(LifeSingle.x,player.y,'addPointLife'+toolsGame.mainElements.player.numberLifes,'+1 life');
-            }
-        }, null, this);
-
-
-        /////
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.bulletsGuns.obj, function(player, bullets_gun){
-            const numberAddBullets = 6;
-            toolsGame.audio.bullets();
-            toolsGame.mainElements.player.countBullets += numberAddBullets;
-            toolsGame.mainElements.player.countBulletsF = true;
-            bullets_gun.kill();
-            toolsGame.windows.boxTopMenu.f=false;
-            toolsGame.addPoint(bullets_gun.x,player.y,'addPointBullet'+toolsGame.mainElements.player.countBullets,'+' + numberAddBullets + ' bullets');
-        }, null, this);
-
-        //// Finishing the level
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.endLevelS.obj, function(player, end_level){
-            if(!levelFile.readyLoad)
-            {
-
-                toolsGame.mainElements.player.removeKeepStone();
-                toolsGame.audio.nextLevelNew.play(0.5);
-                // saving to cookies
-
-                setCookies('id-level-last-memory',levelFile.activeIdLevel);
-
-                setCookies('coins', toolsGame.mainElements.player.numberCoins);
-                setCookies('coins-' + levelFile.activeIdLevel,toolsGame.mainElements.player.numberCoinsLevel);
-                //console.log(toolsGame.mainElements.player.numberCoinsLevelProcentLastMemory + " - " + toolsGame.mainElements.player.numberCoinsLevelProcent);
-                if(toolsGame.mainElements.player.numberCoinsLevelProcent>toolsGame.mainElements.player.numberCoinsLevelProcentLastMemory) {
-                    setCookies('coins-procent-' + levelFile.activeIdLevel,toolsGame.mainElements.player.numberCoinsLevelProcent);
-                    //console.log("save");
+            if(!i.gForceWaterOnlyeOne) {
+                if(i.type===4) {
+                    i.move_y = -33/tileSize;
+                } else {
+                    i.move_y = 0;
                 }
-
-                setCookies('Lifes', toolsGame.mainElements.player.numberLifes);
-                setCookies('main-Lifes', toolsGame.mainElements.player.numberMainLifes);
-
-                setCookies('bullets',toolsGame.mainElements.player.countBullets);
-
-                // poprawic
-                //alert("x");
-                //clearTimeout(toolsGame.mainElements.player.obj.touchGroundTime);
-                //toolsGame.mainElements.player.obj.animations.stop();
-
-                levelFile.readyLoad=true;
-
-                levelFile.blockedKeys=true;
-                //console.log(toolsGame.mainElements.player.obj.position.y);
-                //toolsGame.mainElements.player.obj.position.y = toolsGame.mainElements.player.obj.position.y - 50;
-
-                //console.log(amountLevels + " - " + levelFile.activeIdLevel);
-
-                const finishLevel = function(){
-                    toolsGame.text.hide('score');
-                    toolsGame.text.hide('scoreTotal');
-                    correctCookiesProcent();
-                    levelFile.activeIdLevel=levelFile.activeIdLevel+1;
-                    //alert(Object.keys(game.cache._cacheMap[7]).length + " - " + amountLevels + " - " + levelFile.activeIdLevel);
-                    if(amountLevels === levelFile.activeIdLevel-1) {
-                        toolsGame.windows.boxMenu.show('game-complete');
+                let typeSplash=false;
+                if(w.type==='water-red') {
+                    if(!i.killed) {
+                        tIntruders.collisionIntruz(i, "total-kill");
+                        i.killed = true;
                     }
-                    else {
-                        //alert(id);
-                        endGame();
-                        levelFile.name='level'+levelFile.activeIdLevel;
-                        //console.log(getCookies("unlock-levels") + " - " + levelFile.activeIdLevel);
+                    typeSplash='splash-water-red';
+                }
+                if(i.animations.currentAnim.name==="left") {
+                    tSplashs.add(((i.body.position.x+(i.body.width/2))/tileSize)-(32/tileSize),i.move_y + ((i.body.position.y+32)/tileSize),typeSplash);
+                } else if(i.animations.currentAnim.name==="right") {
+                    tSplashs.add(((i.body.position.x+(i.body.width/2))/tileSize)+(32/tileSize),i.move_y + ((i.body.position.y+32)/tileSize),typeSplash);
+                } else {
+                    tSplashs.add((i.body.position.x+(i.body.width/2))/tileSize,i.move_y + ((i.body.position.y+28)/tileSize),typeSplash);
+                }
+                i.gForceWaterOnlyeOne = true;
+            }
+            i.gForceWater = true;
+            if(i.animations.currentAnim.name === 'right' || i.animations.currentAnim.name === 'left') {
+                if(!i.delayWater) {
+                    i.gForceWaterOnlyeOne = false;
+                    i.delayWater = true;
+                }
+                if(timeLoop % 15 === 0) {
+                    i.delayWater = false;
+                }
+            }
+        }
+    }, null, this);
 
-                        if(!getCookies("unlock-levels") || getCookies("unlock-levels")<levelFile.activeIdLevel) {
-                            unlockLevels = levelFile.activeIdLevel;
-                            setCookies('unlock-levels',unlockLevels);
-                            //alert("unlockLevels zapisane: " + unlockLevels);
-                        }
-                        //alert(amountLevels + " - " + levelFile.activeIdLevel);
-                        // if(amountLevels === levelFile.activeIdLevel) {
-                        //     alert("congratulations!");
-                        // }
-                        startGame(false,amountLevels === levelFile.activeIdLevel,scorePercent);
-                        // levelFile.readyLoad=false;
-                        // levelFile.blockedKeys=false;
+    arcade.overlap(tPlayer.obj, tCoins.obj, function(player, coin){
+        audio.coin();
+        tPlayer.numberCoins++;
+        tPlayer.numberCoinsLevel++;
+
+        tPlayer.numberCoinsLevelProcent = Math.ceil(100*tPlayer.numberCoinsLevel/oneHP);
+        coin.kill();
+        tWindows.boxTopMenu.f=false;
+        // only animation text
+        toolsGame.addPoint(coin.x,player.y,'addPointGold'+tPlayer.numberCoins,'+1 gold');
+
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tLifes.obj, function(player, Life){
+        tPlayer.numberMainLifes++;
+        audio.life();
+        player.body.velocity.y = -300;
+        timeEvents.remove(tPlayer.timeLife);
+
+        if(player.tint === 0xFFFFFF){
+            tPlayer.scale('increase');
+            tPlayer.timeLife = timeEvents.add(30000, function(){
+                if(player.tint === 16776960) {
+                    tPlayer.scale('restart');
+                }
+            }, this);
+        }
+
+        timeEvents.add(200, function(){
+            audio.life();
+            timeEvents.add(200, function(){
+                audio.life();
+            }, this);
+        }, this);
+
+        Life.kill();
+        tWindows.boxTopMenu.f=false;
+        toolsGame.addPoint(Life.x,player.y,'addPointFullLife'+tPlayer.numberMainLifes,'+1 full life');
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tLifeSingleS.obj, function(player, LifeSingle){
+        if(tPlayer.numberLifes===amountLife) {
+            toolsGame.addPoint(LifeSingle.x,player.y,'addPointLife'+tPlayer.numberLifes,'You have a full bag');
+        } else {
+            tPlayer.numberLifes++;
+            audio.life();
+            LifeSingle.kill();
+            tWindows.boxTopMenu.f=false;
+            toolsGame.addPoint(LifeSingle.x,player.y,'addPointLife'+tPlayer.numberLifes,'+1 life');
+        }
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tBulletsGuns.obj, function(player, bullets_gun){
+        const numberAddBullets = 6;
+        audio.bullets();
+        tPlayer.countBullets += numberAddBullets;
+        tPlayer.countBulletsF = true;
+        bullets_gun.kill();
+        tWindows.boxTopMenu.f=false;
+        toolsGame.addPoint(bullets_gun.x,player.y,'addPointBullet'+tPlayer.countBullets,'+' + numberAddBullets + ' bullets');
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tEndLevelS.obj, function(){
+        if(!levelFile.readyLoad)
+        {
+
+            tPlayer.removeKeepStone();
+            audio.nextLevelNew.play(0.5);
+            // saving to cookies
+
+            setCookies('id-level-last-memory',levelFile.activeIdLevel);
+
+            setCookies('coins', tPlayer.numberCoins);
+            setCookies('coins-' + levelFile.activeIdLevel,tPlayer.numberCoinsLevel);
+            //console.log(tPlayer.numberCoinsLevelProcentLastMemory + " - " + tPlayer.numberCoinsLevelProcent);
+            if(tPlayer.numberCoinsLevelProcent>tPlayer.numberCoinsLevelProcentLastMemory) {
+                setCookies('coins-procent-' + levelFile.activeIdLevel,tPlayer.numberCoinsLevelProcent);
+                //console.log("save");
+            }
+
+            setCookies('Lifes', tPlayer.numberLifes);
+            setCookies('main-Lifes', tPlayer.numberMainLifes);
+
+            setCookies('bullets',tPlayer.countBullets);
+
+            levelFile.readyLoad=true;
+
+            levelFile.blockedKeys=true;
+            const finishLevel = function(){
+                toolsGame.text.hide('score');
+                toolsGame.text.hide('scoreTotal');
+                correctCookiesProcent();
+                levelFile.activeIdLevel=levelFile.activeIdLevel+1;
+                if(amountLevels === levelFile.activeIdLevel-1) {
+                    tWindows.boxMenu.show('game-complete');
+                }
+                else {
+                    endGame();
+                    levelFile.name='level'+levelFile.activeIdLevel;
+
+                    if(!getCookies("unlock-levels") || getCookies("unlock-levels")<levelFile.activeIdLevel) {
+                        unlockLevels = levelFile.activeIdLevel;
+                        setCookies('unlock-levels',unlockLevels);
                     }
-                };
+                    startGame(false,amountLevels === levelFile.activeIdLevel,scorePercent);
+                }
+            };
 
-                if(!theEndCredits) {
-                    toolsGame.mainElements.player.obj.animations.play('end-level');
-                    game.time.events.add(3000,function(){
-                        toolsGame.mainElements.player.obj.animations.play('idle-left');
-                    },this);
-                    toolsGame.mainElements.player.obj.body.bounce.y = .9;
+            if(!theEndCredits) {
+                tPlayer.obj.animations.play('end-level');
+                timeEvents.add(3000,function(){
+                    tPlayer.obj.animations.play('idle-left');
+                },this);
+                tPlayer.obj.body.bounce.y = .9;
 
-                    // jump for finish level
-                    toolsGame.mainElements.player.obj.body.velocity.y = -330;
-                    toolsGame.mainElements.player.jumpTimer = game.time.now + 330;
+                // jump for finish level
+                tPlayer.obj.body.velocity.y = -330;
+                tPlayer.jumpTimer = game.time.now + 330;
 
-                    // Percent presentation
-                    const theBestScorePrecent = toolsGame.mainElements.player.numberCoinsLevelProcentLastMemory;
-                    let showTheBestScore='';
-                    scorePercent = 0;
+                // Percent presentation
+                const theBestScorePrecent = tPlayer.numberCoinsLevelProcentLastMemory;
+                let showTheBestScore='';
+                scorePercent = 0;
 
-                    const scoreInterval = function () {
-                        toolsGame.text.show('center',0,0,0.9,'Score: '+scorePercent+'%','bold 20px Arial','#dad9d5',true,'score',true);
-                        toolsGame.audio.ticScore();
-                        if(scorePercent < toolsGame.mainElements.player.numberCoinsLevelProcent) {
-                            scorePercent ++;
-                            game.time.events.add(100, scoreInterval, this);
+                const scoreInterval = function () {
+                    toolsGame.text.show('center',0,0,0.9,'Score: '+scorePercent+'%','bold 20px Arial','#dad9d5',true,'score',true);
+                    audio.ticScore();
+                    if(scorePercent < tPlayer.numberCoinsLevelProcent) {
+                        scorePercent ++;
+                        timeEvents.add(100, scoreInterval, this);
+                    } else {
+                        audio.quake();
+                        game.camera.shake(0.05, 500, true, Phaser.Camera.SHAKE_VERTICAL);
+                        if(theBestScorePrecent>scorePercent) {
+                            showTheBestScore="\n" + 'Your the best score: ' + theBestScorePrecent + '%';
                         } else {
-                            toolsGame.audio.quake();
-                            game.camera.shake(0.05, 500, true, Phaser.Camera.SHAKE_VERTICAL);
-                            if(theBestScorePrecent>scorePercent) {
-                                showTheBestScore="\n" + 'Your the best score: ' + theBestScorePrecent + '%';
-                            } else {
-                                if(scorePercent) {
-                                    showTheBestScore="\n" + 'This is your best score!';
-                                }
-                            }
-
-                            //console.log(amountLevels + " - " + levelFile.activeIdLevel);
-                            if(amountLevels === levelFile.activeIdLevel+1){
-                                game.time.events.add(1000, function(){
-                                    //console.log(amountLevels);
-                                    let globalPercent = 0;
-                                    for(let i=1; i<amountLevels; i++){
-                                        if(getCookies('coins-procent-' + i)) {
-                                            globalPercent +=  parseInt(getCookies('coins-procent-' + i));
-                                            //console.log(i + ' istnieje i wynosci: ' + getCookies('coins-procent-' + i) + '%');
-                                        }
-                                    }
-                                    globalPercent = Math.ceil(globalPercent / (amountLevels-1));
-
-                                    let scoreTotalPercent = 0;
-                                    const scoreTotalIntreval = function() {
-                                        if(scoreTotalPercent < globalPercent) {
-                                            scoreTotalPercent ++;
-                                            game.time.events.add(100, scoreTotalIntreval, this);
-                                        }
-                                        else {
-                                            toolsGame.audio.quake(.6);
-                                            game.camera.shake(0.08, 600, true, Phaser.Camera.SHAKE_VERTICAL);
-                                            game.time.events.add(4000, finishLevel, this);
-                                        }
-                                        toolsGame.text.hide('scoreTotal');
-                                        toolsGame.text.show('center',0,3*tileSize,0.9,'Score Total: '+scoreTotalPercent+'%','bold 32px Arial','#dad9d5',true,'scoreTotal',true);
-                                        toolsGame.audio.ticScore();
-                                    };
-                                    scoreTotalIntreval();
-                                }, this);
-                            } else {
-                                game.time.events.add(4000, finishLevel, this);
-                            }
-                        }
-                        toolsGame.text.hide('score');
-                        toolsGame.text.show('center', 0, 0, 0.9, 'Score: ' + scorePercent + '%' + showTheBestScore, 'bold 20px Arial', '#dad9d5', true, 'score', true);
-                    };
-                    //scoreInterval();
-                    game.time.events.add(3000, scoreInterval, this);
-
-                } else {
-                    game.time.events.add(3000, finishLevel, this);
-                }
-
-                // animation jump left/right for finish level
-                let start = null;
-                const step = function(timestamp) {
-                    if (!start) start = timestamp;
-
-                    if (facing === 'right') {
-                        toolsGame.mainElements.player.obj.body.velocity.x = 100;
-
-                    } else if (facing === 'left') {
-                        toolsGame.mainElements.player.obj.body.velocity.x = -100;
-                    }
-
-                    const progress = timestamp - start;
-                    if (progress < 500) {
-                        window.requestAnimationFrame(step);
-                    }
-                }
-
-                window.requestAnimationFrame(step);
-
-            }
-            toolsGame.windows.boxTopMenu.f=false;
-        }, null, this);
-
-        //// Save the place
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.saveLevelS.obj, function(player, save_level){
-            //console.log(player);
-            if(!(saveX === save_level.body.x && saveY === save_level.body.y) && !save_level.block) {
-                //console.log("Save place: " + save_level.body.x + " / " + save_level.body.y);
-                saveX = save_level.body.x;
-                saveY = save_level.body.y;
-                save_level.block = true;
-                save_level.animations.play('run2', 17, true);
-                toolsGame.audio.flash(1);
-            }
-
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.keys.obj, function(p,k){
-            k.kill();
-            keys++;
-            toolsGame.audio.key(.8);
-            toolsGame.windows.boxTopMenu.f=false;
-            toolsGame.addPoint(k.x,p.y,'addPointKey','You got the key!');
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.locks.obj, function(p,l){
-
-            if(keys > 0) {
-                l.kill();
-
-                toolsGame.mainElements.openDoor(p);
-
-                // let ind1 = 0;
-                // toolsGame.mainElements.doorsHorizontal.obj.forEach(function(doorH){
-                //     doorH.index = ind1;
-                //     ind1++;
-                // },this);
-                // let ind2 = 0;
-                // toolsGame.mainElements.doors.obj.forEach(function(door){
-                //     door.index = ind2;
-                //     ind2++;
-                // },this);
-                //
-                // const distanceArray = [];
-                // toolsGame.mainElements.doors.obj.forEach(function(door){
-                //     distanceArray.push(game.physics.arcade.distanceBetween(l,door));
-                //     //console.log(game.physics.arcade.distanceBetween(l,door));
-                // },this);
-                // const minDistnaceArray = Math.min.apply(null, distanceArray);
-                //
-                // const distanceArrayH = [];
-                // toolsGame.mainElements.doorsHorizontal.obj.forEach(function(doorH){
-                //     distanceArrayH.push(game.physics.arcade.distanceBetween(l,doorH));
-                //     //console.log(game.physics.arcade.distanceBetween(l,door));
-                // },this);
-                // const minDistnaceArrayH = Math.min.apply(null, distanceArrayH);
-                //
-                //
-                // toolsGame.mainElements.doors.obj.forEach(function(door){
-                //
-                //     if(isExists(door) && !door.deactive) {
-                //         if (minDistnaceArray === game.physics.arcade.distanceBetween(l, door)) {
-                //             //console.log(door.index);
-                //             if(isExists(door) && !door.deactive) {
-                //                 if(!door.zero) {
-                //                     door.deactive = true;
-                //                     door.body.velocity.y = -50;
-                //                     toolsGame.audio.doorLift();
-                //                     game.time.events.add(3000, function(){
-                //                         door.body.velocity.y = 0;
-                //                     }, this);
-                //                 }
-                //             }
-                //         }
-                //     }
-                // },this);
-                //
-                // toolsGame.mainElements.doorsHorizontal.obj.forEach(function(doorH){
-                //
-                //     if (minDistnaceArrayH === game.physics.arcade.distanceBetween(l, doorH)) {
-                //         if (isExists(doorH) && !doorH.deactive) {
-                //             if(!doorH.zero) {
-                //                 doorH.deactive = true;
-                //                 toolsGame.mainElements.explosion.add(doorH.x / tileSize, doorH.y / tileSize);
-                //                 doorH.kill();
-                //             }
-                //         }
-                //     }
-                // },this);
-
-
-                toolsGame.windows.boxTopMenu.f=false; // refresh
-                keys--;
-            }
-        }, null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.player.obj, toolsGame.mainElements.insideHouses1.obj);
-
-        game.physics.arcade.collide(toolsGame.mainElements.player.obj, toolsGame.mainElements.doors.obj);
-        game.physics.arcade.collide(toolsGame.mainElements.player.obj, toolsGame.mainElements.doorsHorizontal.obj,function(p,d){
-            // ten sposob sprawdza sie najlepiej - sprobowac wdrozyc go wszedzie jako standard
-            p.youCanJump = true;
-            game.time.events.add(300, function(){
-                p.youCanJump = false;
-            },this);
-            toolsGame.mainElements.player.checkIfWasKilledAndOther(p);
-        },null,this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.intruders.obj, toolsGame.mainElements.doors.obj, function(i,d){
-            toolsGame.mainElements.intruders.collisionBack(i);
-        });
-
-        game.physics.arcade.collide(toolsGame.mainElements.intruders.obj, toolsGame.mainElements.doorsHorizontal.obj);
-
-        game.physics.arcade.collide(toolsGame.mainElements.stoneBigS.obj, toolsGame.mainElements.doors.obj);
-        game.physics.arcade.collide(toolsGame.mainElements.player.gun.bullets.obj, toolsGame.mainElements.doors.obj,function(b,d){
-            toolsGame.mainElements.explosion.add(d.x/tileSize, b.y/tileSize);
-            b.kill();;
-        },null,this);
-        game.physics.arcade.collide(toolsGame.mainElements.stoneBigS.obj, toolsGame.mainElements.doorsHorizontal.obj);
-
-
-        // dotatkowy warunek jesli player dotyka dna mapy
-        if(toolsGame.mainElements.player.obj.body.y+toolsGame.mainElements.player.obj.height === map.height*map.tileHeight) {
-            //toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-            toolsGame.mainElements.player.lostLife(toolsGame.mainElements.player.obj,3);
-        }
-
-        //player vs fire
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.fire.fireUpS.obj, function(player, fire){
-            toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-            toolsGame.mainElements.player.lostLife(player);
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.fire.fireDownS.obj, function(player, fire){
-            toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-            toolsGame.mainElements.player.lostLife(player);
-        }, null, this);
-
-        // game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.fire.fireUpNormalS.obj, function(player, fire){
-        //     toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-        //     toolsGame.mainElements.player.lostLife(player);
-        // }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.fire.fireLeftS.obj, function(player, fire){
-            toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-            toolsGame.mainElements.player.lostLife(player);
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.fire.fireRightS.obj, function(player, fire){
-            toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-            toolsGame.mainElements.player.lostLife(player);
-        }, null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.intruders.obj, layer);
-
-
-
-        // player vs intruder
-        if(!levelFile.blockedKeys) {
-
-            game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.intruders.obj, function(player, intruz){
-                if(player.scale.x !== .8) {
-                    if(!intruz.killing) {
-                        if(player.body.overlapY>0)
-                        {
-                            // cccc
-                            toolsGame.mainElements.player.checkIfWasKilledAndOther(player);
-
-
-                            if(intruz.type === 4) {
-                                toolsGame.audio.breakBones();
-                            } else if(intruz.type === 5) {
-                                toolsGame.audio.condor();
-                            } else if(intruz.type === 7) {
-                                toolsGame.audio.owl();
-                            } else {
-                                toolsGame.audio.screamIntruder(.05);
-                            }
-                            toolsGame.mainElements.intruders.collisionIntruz(intruz);
-                            if(!(intruz.type === 5 || intruz.type === 6 || intruz.type === 5)) {
-                                if(!intruz.hit || !player.killHitIntruder) {
-                                    player.killHitIntruder=true;
-                                    intruz.hit=1;
-                                }
-                                if(intruz.hit > 6) {
-                                    if(!intruz.killing) toolsGame.mainElements.intruders.collisionIntruz(intruz,"total-kill");
-                                    intruz.killing=true;
-                                    intruz.hit=false;
-                                    if(intruz.type<4) {
-                                        toolsGame.mainElements.bulletsGuns.add(intruz.x/tileSize-1, intruz.y/tileSize);
-                                    }
-                                    if(intruz.type<4 && intruz.giveBackLive) {
-                                        toolsGame.mainElements.LifeSingleS.add(intruz.x/tileSize, intruz.y/tileSize);
-                                    }
-                                } else {
-                                    intruz.hit++;
-                                }
+                            if(scorePercent) {
+                                showTheBestScore="\n" + 'This is your best score!';
                             }
                         }
 
-                        // tracenie zycia
-                        //if(player.body.overlapX>0 || player.body.overlapX<0)
+                        //console.log(amountLevels + " - " + levelFile.activeIdLevel);
+                        if(amountLevels === levelFile.activeIdLevel+1){
+                            timeEvents.add(1000, function(){
+                                //console.log(amountLevels);
+                                let globalPercent = 0;
+                                for(let i=1; i<amountLevels; i++){
+                                    if(getCookies('coins-procent-' + i)) {
+                                        globalPercent +=  parseInt(getCookies('coins-procent-' + i));
+                                        //console.log(i + ' istnieje i wynosci: ' + getCookies('coins-procent-' + i) + '%');
+                                    }
+                                }
+                                globalPercent = Math.ceil(globalPercent / (amountLevels-1));
 
-                        if(player.body.overlapY!==0)
-                        {
-                            toolsGame.mainElements.player.lostLife(player);
-                            intruz.giveBackLive = true;
+                                let scoreTotalPercent = 0;
+                                const scoreTotalIntreval = function() {
+                                    if(scoreTotalPercent < globalPercent) {
+                                        scoreTotalPercent ++;
+                                        timeEvents.add(100, scoreTotalIntreval, this);
+                                    }
+                                    else {
+                                        audio.quake(.6);
+                                        game.camera.shake(0.08, 600, true, Phaser.Camera.SHAKE_VERTICAL);
+                                        timeEvents.add(4000, finishLevel, this);
+                                    }
+                                    toolsGame.text.hide('scoreTotal');
+                                    toolsGame.text.show('center',0,3*tileSize,0.9,'Score Total: '+scoreTotalPercent+'%','bold 32px Arial','#dad9d5',true,'scoreTotal',true);
+                                    audio.ticScore();
+                                };
+                                scoreTotalIntreval();
+                            }, this);
+                        } else {
+                            timeEvents.add(4000, finishLevel, this);
                         }
-                        //console.log(player.body.overlapY);
                     }
-                } else {
-                    intruz.body.checkCollision.up = false;
-                    // intruz.body.checkCollision.down = false;
-                    intruz.body.checkCollision.right = false;
-                    intruz.body.checkCollision.left = false;
-                    game.time.events.add(300, function(){
-                        intruz.body.checkCollision.up = true;
-                        // intruz.body.checkCollision.down = true;
-                        intruz.body.checkCollision.right = true;
-                        intruz.body.checkCollision.left = true;
-                    }, this);
-                }
+                    toolsGame.text.hide('score');
+                    toolsGame.text.show('center', 0, 0, 0.9, 'Score: ' + scorePercent + '%' + showTheBestScore, 'bold 20px Arial', '#dad9d5', true, 'score', true);
+                };
+                //scoreInterval();
+                timeEvents.add(3000, scoreInterval, this);
 
-                // const p = toolsGame.mainElements.player;
-                // dopracowac w przypadku gier dla dzieci
-                // console.log('toolsGame.mainElements.player.numberLifes: ', p.numberLifes);
-                // if (p.numberLifes < 1) {
-                //     p.obj.body.velocity.y = -120 * tileSize;
-                //
-                //     p.obj.body.checkCollision.none = true;
-                //     p.obj.body.collideWorldBounds = false;
-                //     p.obj.body.allowGravity = false;
-                //     game.camera.target = null;
-                //
-                //     setTimeout(function(p) {
-                //         p.obj.body.checkCollision.none = false;
-                //         p.obj.body.collideWorldBounds = true;
-                //         p.obj.body.allowGravity = true;
-                //         game.camera.target = p.obj;
-                //     }, 2000, p);
-                // }
-
-            }, null, this);
-
-            game.physics.arcade.collide(toolsGame.mainElements.intruders.obj, toolsGame.mainElements.player.obj);
-
-        }
-
-        // przeniesiona do gory - dotatkowy warunek jesli intruz dotyka dna mapy
-        // toolsGame.mainElements.intruders.obj.forEach(function(intruz){
-        //     if(intruz.body.y+intruz.height === map.height*map.tileHeight) {
-        //         if(!intruz.killing) toolsGame.mainElements.intruders.collisionIntruz(intruz,"total-kill");
-        //         intruz.killing=true;
-        //     }
-        // }, this, true);
-
-
-        // Shooting
-        if(toolsGame.mainElements.player.countBulletsF){
-            if(toolsGame.mainElements.player.countBullets === 0) {
-                //console.log("end of ammunition");
-                toolsGame.buttons.navigations.shot.alpha = 0;
-                toolsGame.buttons.navigations.shot.inputEnabled = false;
             } else {
-                //console.log("you have ammunition");
-                toolsGame.buttons.navigations.shot.alpha = 0.6;
-                toolsGame.buttons.navigations.shot.inputEnabled = true;
+                timeEvents.add(3000, finishLevel, this);
             }
-            toolsGame.mainElements.player.countBulletsF = false;
+
+            // animation jump left/right for finish level
+            let start = null;
+            const step = function(timestamp) {
+                if (!start) start = timestamp;
+
+                if (facing === 'right') {
+                    tPlayer.obj.body.velocity.x = 100;
+
+                } else if (facing === 'left') {
+                    tPlayer.obj.body.velocity.x = -100;
+                }
+
+                const progress = timestamp - start;
+                if (progress < 500) {
+                    window.requestAnimationFrame(step);
+                }
+            }
+
+            window.requestAnimationFrame(step);
+
+        }
+        tWindows.boxTopMenu.f=false;
+    }, null, this);
+
+    //// Save the place
+    arcade.overlap(tPlayer.obj, tSaveLevelS.obj, function(player, save_level){
+        //console.log(player);
+        if(!(saveX === save_level.body.x && saveY === save_level.body.y) && !save_level.block) {
+            //console.log("Save place: " + save_level.body.x + " / " + save_level.body.y);
+            saveX = save_level.body.x;
+            saveY = save_level.body.y;
+            save_level.block = true;
+            save_level.animations.play('run2', 17, true);
+            audio.flash(1);
         }
 
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tKeys.obj, function(p,k){
+        k.kill();
+        keys++;
+        audio.key(.8);
+        tWindows.boxTopMenu.f=false;
+        toolsGame.addPoint(k.x,p.y,'addPointKey','You got the key!');
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tLocks.obj, function(p,l){
+        if(keys > 0) {
+            l.kill();
+            tMain.openDoor(p);
+            tWindows.boxTopMenu.f=false; // refresh
+            keys--;
+        }
+    }, null, this);
+
+    arcade.collide(tPlayer.obj, tInsideHouses1.obj);
+
+    arcade.collide(tPlayer.obj, tMain.doors.obj);
+    arcade.collide(tPlayer.obj, tMain.doorsHorizontal.obj,function(p){
+        // ten sposob sprawdza sie najlepiej - sprobowac wdrozyc go wszedzie jako standard
+        p.youCanJump = true;
+        timeEvents.add(300, function(){
+            p.youCanJump = false;
+        },this);
+        tPlayer.checkIfWasKilledAndOther(p);
+    },null,this);
+
+    arcade.collide(tIntruders.obj, tMain.doors.obj, function(i,d){
+        tIntruders.collisionBack(i);
+    });
+
+    arcade.collide(tIntruders.obj, tMain.doorsHorizontal.obj);
+
+    arcade.collide(tStoneBigS.obj, tMain.doors.obj);
+    arcade.collide(tGun.bullets.obj, tMain.doors.obj,function(b,d){
+        tMain.explosion.add(d.x/tileSize, b.y/tileSize);
+        b.kill();
+    },null,this);
+    arcade.collide(tStoneBigS.obj, tMain.doorsHorizontal.obj);
+
+    // dotatkowy warunek jesli player dotyka dna mapy
+    if(tPlayer.obj.body.y+tPlayer.obj.height === curMap.height*curMap.tileHeight) {
+        tPlayer.lostLife(tPlayer.obj,3);
+    }
+
+    //player vs fire
+    arcade.overlap(tPlayer.obj, tFire.fireUpS.obj, function(player){
+        tPlayer.checkIfWasKilledAndOther(tPlayer.obj);
+        tPlayer.lostLife(player);
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tFire.fireDownS.obj, function(player){
+        tPlayer.checkIfWasKilledAndOther(tPlayer.obj);
+        tPlayer.lostLife(player);
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tFire.fireLeftS.obj, function(player){
+        tPlayer.checkIfWasKilledAndOther(tPlayer.obj);
+        tPlayer.lostLife(player);
+    }, null, this);
+
+    arcade.overlap(tPlayer.obj, tFire.fireRightS.obj, function(player){
+        tPlayer.checkIfWasKilledAndOther(tPlayer.obj);
+        tPlayer.lostLife(player);
+    }, null, this);
+
+    arcade.collide(tIntruders.obj, curLayer);
+
+    // player vs intruder
+    if(!levelFile.blockedKeys) {
+
+        arcade.overlap(tPlayer.obj, tIntruders.obj, function(player, intruz){
+            if(player.scale.x !== .8) {
+                if(!intruz.killing) {
+                    if(player.body.overlapY>0)
+                    {
+                        // cccc
+                        tPlayer.checkIfWasKilledAndOther(player);
 
 
+                        if(intruz.type === 4) {
+                            audio.breakBones();
+                        } else if(intruz.type === 5) {
+                            audio.condor();
+                        } else if(intruz.type === 7) {
+                            audio.owl();
+                        } else {
+                            audio.screamIntruder(.05);
+                        }
+                        tIntruders.collisionIntruz(intruz);
+                        if(!(intruz.type === 5 || intruz.type === 6 || intruz.type === 5)) {
+                            if(!intruz.hit || !player.killHitIntruder) {
+                                player.killHitIntruder=true;
+                                intruz.hit=1;
+                            }
+                            if(intruz.hit > 6) {
+                                if(!intruz.killing) tIntruders.collisionIntruz(intruz,"total-kill");
+                                intruz.killing=true;
+                                intruz.hit=false;
+                                if(intruz.type<4) {
+                                    tBulletsGuns.add(intruz.x/tileSize-1, intruz.y/tileSize);
+                                }
+                                if(intruz.type<4 && intruz.giveBackLive) {
+                                    tLifeSingleS.add(intruz.x/tileSize, intruz.y/tileSize);
+                                }
+                            } else {
+                                intruz.hit++;
+                            }
+                        }
+                    }
 
-        if(timeLoop>=120) timeLoop=0;
-        else timeLoop++;
-        //console.log(timeLoop);
+                    // tracenie zycia
+                    //if(player.body.overlapX>0 || player.body.overlapX<0)
 
-
-        // tego uzyc zamiast detectionHoldOnObject ...
-        // toolsGame.mainElements.keys.obj.forEach(function(k){
-        //     console.log(game.physics.arcade.distanceBetween(toolsGame.mainElements.player.obj,k));
-        // }, this, true);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.intruders.obj, layer, function(intruz,lay){
-
-            //console.log(game.physics.arcade.distanceBetween(toolsGame.mainElements.player.obj,intruz));
-
-            // if(toolsGame.mainElements.player.obj.position.x>intruz.position.x-game.width/1.5 &&
-            //     toolsGame.mainElements.player.obj.position.x<intruz.position.x+game.width/1.5 &&
-            //     toolsGame.mainElements.player.obj.position.y>intruz.position.y-game.height/1.5 &&
-            //     toolsGame.mainElements.player.obj.position.y<intruz.position.y+game.height/1.5) {
-
-
-            if(/* intruz.type===6 || */ toolsGame.mainElements.player.detectionHoldOnObject(intruz,.8)) { // im mniejsza wartosc tym wikeszy zasieg aktywacji intruza
-                intruz.active = true;
-                if(intruz.alpha===0) {
-                    intruz.alpha=1;
+                    if(player.body.overlapY!==0)
+                    {
+                        tPlayer.lostLife(player);
+                        intruz.giveBackLive = true;
+                    }
+                    //console.log(player.body.overlapY);
                 }
             } else {
-                intruz.active = false;
-                intruz.alpha = 0;
-                intruz.body.velocity.x=0;
-                intruz.animations.stop();
+                intruz.body.checkCollision.up = false;
+                // intruz.body.checkCollision.down = false;
+                intruz.body.checkCollision.right = false;
+                intruz.body.checkCollision.left = false;
+                timeEvents.add(300, function(){
+                    intruz.body.checkCollision.up = true;
+                    // intruz.body.checkCollision.down = true;
+                    intruz.body.checkCollision.right = true;
+                    intruz.body.checkCollision.left = true;
+                }, this);
             }
 
+            // const p = tPlayer;
+            // dopracowac w przypadku gier dla dzieci
+            // console.log('tPlayer.numberLifes: ', p.numberLifes);
+            // if (p.numberLifes < 1) {
+            //     p.obj.body.velocity.y = -120 * tileSize;
+            //
+            //     p.obj.body.checkCollision.none = true;
+            //     p.obj.body.collideWorldBounds = false;
+            //     p.obj.body.allowGravity = false;
+            //     game.camera.target = null;
+            //
+            //     setTimeout(function(p) {
+            //         p.obj.body.checkCollision.none = false;
+            //         p.obj.body.collideWorldBounds = true;
+            //         p.obj.body.allowGravity = true;
+            //         game.camera.target = p.obj;
+            //     }, 2000, p);
+            // }
 
+        }, null, this);
 
+        arcade.collide(tIntruders.obj, tPlayer.obj);
 
-            if(intruz.active) {
-                if(!intruz.timeLoop) {
-                    intruz.timeLoop = 1;
-                    toolsGame.mainElements.intruders.id++;
-                    intruz.id = toolsGame.mainElements.intruders.id;
-                    intruz.break = 4000 * intruz.id;
-                    //console.log("intruz type: " + intruz.type + " loaded");
+    }
+    // Shooting
+    if(tPlayer.countBulletsF){
+        if(tPlayer.countBullets === 0) {
+            //console.log("end of ammunition");
+            toolsGame.buttons.navigations.shot.alpha = 0;
+            toolsGame.buttons.navigations.shot.inputEnabled = false;
+        } else {
+            //console.log("you have ammunition");
+            toolsGame.buttons.navigations.shot.alpha = 0.6;
+            toolsGame.buttons.navigations.shot.inputEnabled = true;
+        }
+        tPlayer.countBulletsF = false;
+    }
+
+    if(timeLoop>=120) timeLoop=0;
+    else timeLoop++;
+
+    arcade.overlap(tIntruders.obj, curLayer, function(intruz){
+        if(tPlayer.detectionHoldOnObject(intruz,.8)) { // im mniejsza wartosc tym wikeszy zasieg aktywacji intruza
+            intruz.active = true;
+            if(intruz.alpha===0) {
+                intruz.alpha=1;
+            }
+        } else {
+            intruz.active = false;
+            intruz.alpha = 0;
+            intruz.body.velocity.x=0;
+            intruz.animations.stop();
+        }
+
+        if(intruz.active) {
+            if(!intruz.timeLoop) {
+                intruz.timeLoop = 1;
+                tIntruders.id++;
+                intruz.id = tIntruders.id;
+                intruz.break = 4000 * intruz.id;
+            }
+            intruz.timeLoop++;
+            intruz.body.velocity.x = 0;
+
+            if(intruz.randomMove === 'intruzRight' || intruz.randomMove === 'intruzLeft')
+            {
+                if(intruz.type === 1 || intruz.type === 4 || intruz.type === 5 || intruz.type === 7) {
+
+                    if(intruz.body.blocked.left) {
+                        if(intruz.type === 4) {
+                            intruz.frame=41;
+                            timeEvents.add(30, function(){
+                                intruz.frame=37;
+                            }, this);
+                            timeEvents.add(60, function(){
+                                intruz.randomMove='intruzLeft';
+                            }, this);
+
+                        }
+                        else intruz.randomMove='intruzLeft';
+
+                        if(intruz.type === 5) {
+                            audio.condor();
+                        }
+
+                        if(intruz.type === 7) {
+                            audio.owl();
+                        }
+                    }
+                    else if(intruz.body.blocked.right) {
+                        if(intruz.type === 4) {
+                            intruz.frame=40;
+
+                            timeEvents.add(30, function(){
+                                intruz.frame=37;
+                            }, this);
+                            timeEvents.add(60, function(){
+                                intruz.randomMove='intruzRight';
+                            }, this);
+                        }
+                        else intruz.randomMove='intruzRight';
+
+                        if(intruz.type === 5) {
+                            audio.condor();
+                        }
+                        if(intruz.type === 7) {
+                            audio.owl();
+                        }
+                    }
                 }
 
-                //if parzyste {} else {}
+                if(intruz.body.blocked.up) {
+                    if(intruz.body.blocked.left) intruz.randomMove='intruzLeft';
+                    else if(intruz.body.blocked.right) intruz.randomMove='intruzRight';
+                }
 
-                //console.log(intruz);
-
-                intruz.timeLoop++;
-
-
-                intruz.body.velocity.x = 0;
-
-
-                if(intruz.randomMove=='intruzRight' || intruz.randomMove=='intruzLeft')
-                {
-                    if(intruz.type === 1 || intruz.type === 4 || intruz.type === 5 || intruz.type === 7) {
-
-                        if(intruz.body.blocked.left) {
-                            if(intruz.type === 4) {
-                                intruz.frame=41;
-                                //intruz.animations.play('turn-left');
-                                // setTimeout(function(){
-                                //     intruz.frame=37;
-                                // },30);
-                                // setTimeout(function(){
-                                //     intruz.randomMove='intruzLeft';
-                                // },60);
-
-                                game.time.events.add(30, function(){
-                                    intruz.frame=37;
-                                }, this);
-                                game.time.events.add(60, function(){
-                                    intruz.randomMove='intruzLeft';
-                                }, this);
-
-                            }
-                            else intruz.randomMove='intruzLeft';
-
-                            if(intruz.type === 5) {
-                                toolsGame.audio.condor();
-                            }
-
-                            if(intruz.type === 7) {
-                                toolsGame.audio.owl();
-                            }
-                        }
-                        else if(intruz.body.blocked.right) {
-                            if(intruz.type === 4) {
-                                intruz.frame=40;
-
-                                // setTimeout(function(){
-                                //     intruz.frame=37;
-                                // },30);
-                                // setTimeout(function(){
-                                //     intruz.randomMove='intruzRight';
-                                // },60);
-
-                                game.time.events.add(30, function(){
-                                    intruz.frame=37;
-                                }, this);
-                                game.time.events.add(60, function(){
-                                    intruz.randomMove='intruzRight';
-                                }, this);
-                            }
-                            else intruz.randomMove='intruzRight';
-
-                            if(intruz.type === 5) {
-                                toolsGame.audio.condor();
-                            }
-                            if(intruz.type === 7) {
-                                toolsGame.audio.owl();
-                            }
+                if(intruz.type === 2 || intruz.type === 3) {
+                    if(intruz.body.blocked.left || intruz.body.blocked.right) {
+                        tIntruders.jump(intruz,450);
+                        if (timeLoop === 2) {
+                            if (intruz.body.blocked.left) intruz.randomMove = 'intruzLeft';
+                            else if (intruz.body.blocked.right) intruz.randomMove = 'intruzRight';
                         }
                     }
+                }
 
-                    if(intruz.body.blocked.up) {
-                        if(intruz.body.blocked.left) intruz.randomMove='intruzLeft';
-                        else if(intruz.body.blocked.right) intruz.randomMove='intruzRight';
-                    }
-
-                    if(intruz.type === 2 || intruz.type === 3) {
-                        if(intruz.body.blocked.left || intruz.body.blocked.right) {
-                            toolsGame.mainElements.intruders.jump(intruz,450);
-                            if (timeLoop === 2) {
-                                if (intruz.body.blocked.left) intruz.randomMove = 'intruzLeft';
-                                else if (intruz.body.blocked.right) intruz.randomMove = 'intruzRight';
-                            }
-                        }
-                    }
-
-                    if(intruz.type === 1 || intruz.type === 2 || intruz.type === 4 || intruz.type === 5 || intruz.type === 6 || intruz.type === 7) {
-                        if (intruz.randomMove == 'intruzRight') {
-                            if(intruz.type === 4) {
-                                intruz.body.velocity.x = -intruz.randomSpeed/2;
-                            } else if (intruz.type === 5 || intruz.type === 7) {
-                                intruz.body.velocity.x = -intruz.randomSpeed/1.2;
-                            } else {
-                                if(intruz.deactiveVelocity) {
-                                    if(intruz.deactiveVelocity === 'left') {
-                                        intruz.body.velocity.x = -1000;
-                                    } else {
-                                        intruz.body.velocity.x = 1000;
-                                    }
-                                    toolsGame.mainElements.intruders.jump(intruz,200);
+                if(intruz.type === 1 || intruz.type === 2 || intruz.type === 4 || intruz.type === 5 || intruz.type === 6 || intruz.type === 7) {
+                    if (intruz.randomMove === 'intruzRight') {
+                        if(intruz.type === 4) {
+                            intruz.body.velocity.x = -intruz.randomSpeed/2;
+                        } else if (intruz.type === 5 || intruz.type === 7) {
+                            intruz.body.velocity.x = -intruz.randomSpeed/1.2;
+                        } else {
+                            if(intruz.deactiveVelocity) {
+                                if(intruz.deactiveVelocity === 'left') {
+                                    intruz.body.velocity.x = -1000;
                                 } else {
-                                    intruz.body.velocity.x = -intruz.randomSpeed;
+                                    intruz.body.velocity.x = 1000;
                                 }
+                                tIntruders.jump(intruz,200);
+                            } else {
+                                intruz.body.velocity.x = -intruz.randomSpeed;
+                            }
+                        }
+                        intruz.animations.play('left');
+                        intruz.check = false;
+                    }
+                    else if (intruz.randomMove === 'intruzLeft') {
+                        if(intruz.type === 4) {
+                            intruz.body.velocity.x = intruz.randomSpeed/2;
+                        } else if (intruz.type === 5 || intruz.type === 7) {
+                            intruz.body.velocity.x = intruz.randomSpeed/1.2;
+                        } else {
+                            if(intruz.deactiveVelocity) {
+                                if(intruz.deactiveVelocity === 'left') {
+                                    intruz.body.velocity.x = -1000;
+                                } else {
+                                    intruz.body.velocity.x = 1000;
+                                }
+                                tIntruders.jump(intruz,200);
+                            } else {
+                                intruz.body.velocity.x = intruz.randomSpeed;
+                            }
+                        }
+                        intruz.animations.play('right');
+                        intruz.check = false;
+                    }
+                }
+                else if(intruz.type === 3) {
+                    if (intruz.randomMove === 'intruzRight') {
+                        if (intruz.timeLoop >= 2000 + intruz.break && intruz.timeLoop <= 4000 + intruz.break) {
+                            if (!intruz.check) {
+                                intruz.body.velocity.x = 0;
+                                intruz.animations.play('idle-left');
+                                intruz.randomMove = 'intruzLeft';
+                                //console.log("x");
+                                intruz.check = true;
+                            }
+                            if (intruz.killing) {
+                                //console.log("xKill");
+                                intruz.animations.play('kill');
+                            }
+                        } else {
+                            if(intruz.deactiveVelocity) {
+                                if(intruz.deactiveVelocity === 'left') {
+                                    intruz.body.velocity.x = -1000;
+                                } else {
+                                    intruz.body.velocity.x = 1000;
+                                }
+                                tIntruders.jump(intruz,200);
+                            } else {
+                                intruz.body.velocity.x = -intruz.randomSpeed;
                             }
                             intruz.animations.play('left');
                             intruz.check = false;
                         }
-                        else if (intruz.randomMove == 'intruzLeft') {
-                            if(intruz.type === 4) {
-                                intruz.body.velocity.x = intruz.randomSpeed/2;
-                            } else if (intruz.type === 5 || intruz.type === 7) {
-                                intruz.body.velocity.x = intruz.randomSpeed/1.2;
-                            } else {
-                                if(intruz.deactiveVelocity) {
-                                    if(intruz.deactiveVelocity === 'left') {
-                                        intruz.body.velocity.x = -1000;
-                                    } else {
-                                        intruz.body.velocity.x = 1000;
-                                    }
-                                    toolsGame.mainElements.intruders.jump(intruz,200);
+                    }
+                    else if (intruz.randomMove === 'intruzLeft') {
+                        if (intruz.timeLoop >= 2000 + intruz.break && intruz.timeLoop <= 4000 + intruz.break) {
+                            if (!intruz.check) {
+                                intruz.body.velocity.x = 0;
+                                intruz.animations.play('idle-right');
+                                intruz.randomMove = 'intruzRight';
+                                //console.log("x");
+                                intruz.check = true;
+                            }
+                            if (intruz.killing) {
+                                //console.log("xKill");
+                                intruz.animations.play('kill');
+                            }
+                        } else {
+                            if(intruz.deactiveVelocity) {
+                                if(intruz.deactiveVelocity === 'left') {
+                                    intruz.body.velocity.x = -1000;
                                 } else {
-                                    intruz.body.velocity.x = intruz.randomSpeed;
+                                    intruz.body.velocity.x = 1000;
                                 }
+                                tIntruders.jump(intruz,200);
+                            } else {
+                                intruz.body.velocity.x = intruz.randomSpeed;
                             }
                             intruz.animations.play('right');
                             intruz.check = false;
                         }
                     }
-                    else if(intruz.type === 3) {
-                        if (intruz.randomMove == 'intruzRight') {
-                            if (intruz.timeLoop >= 2000 + intruz.break && intruz.timeLoop <= 4000 + intruz.break) {
-                                if (!intruz.check) {
-                                    intruz.body.velocity.x = 0;
-                                    intruz.animations.play('idle-left');
-                                    intruz.randomMove = 'intruzLeft';
-                                    //console.log("x");
-                                    intruz.check = true;
-                                }
-                                if (intruz.killing) {
-                                    //console.log("xKill");
-                                    intruz.animations.play('kill');
-                                }
-                            } else {
-                                if(intruz.deactiveVelocity) {
-                                    if(intruz.deactiveVelocity === 'left') {
-                                        intruz.body.velocity.x = -1000;
-                                    } else {
-                                        intruz.body.velocity.x = 1000;
-                                    }
-                                    toolsGame.mainElements.intruders.jump(intruz,200);
-                                } else {
-                                    intruz.body.velocity.x = -intruz.randomSpeed;
-                                }
-                                intruz.animations.play('left');
-                                intruz.check = false;
-                            }
-                        }
-                        else if (intruz.randomMove == 'intruzLeft') {
-                            if (intruz.timeLoop >= 2000 + intruz.break && intruz.timeLoop <= 4000 + intruz.break) {
-                                if (!intruz.check) {
-                                    intruz.body.velocity.x = 0;
-                                    intruz.animations.play('idle-right');
-                                    intruz.randomMove = 'intruzRight';
-                                    //console.log("x");
-                                    intruz.check = true;
-                                }
-                                if (intruz.killing) {
-                                    //console.log("xKill");
-                                    intruz.animations.play('kill');
-                                }
-                            } else {
-                                if(intruz.deactiveVelocity) {
-                                    if(intruz.deactiveVelocity === 'left') {
-                                        intruz.body.velocity.x = -1000;
-                                    } else {
-                                        intruz.body.velocity.x = 1000;
-                                    }
-                                    toolsGame.mainElements.intruders.jump(intruz,200);
-                                } else {
-                                    intruz.body.velocity.x = intruz.randomSpeed;
-                                }
-                                intruz.animations.play('right');
-                                intruz.check = false;
-                            }
-                        }
-                    }
-
-                    if(intruz.type === 6) {
-                        //console.log("player position:");
-                        //console.log(toolsGame.mainElements.player.obj.position.x);
-                        //console.log("intruder position");
-                        //console.log(intruz.position.x);
-                        if(!intruz.area) {
-
-                            //intruz.position.x > toolsGame.mainElements.player.obj.position.x-128 &&
-                            //intruz.position.x < toolsGame.mainElements.player.obj.position.x+64
-
-                            if(intruz.position.x < toolsGame.mainElements.player.obj.position.x) {
-                                intruz.randomMove = 'intruzLeft';
-                            } else {
-                                intruz.randomMove = 'intruzRight';
-                            }
-                            intruz.area = true;
-                            game.time.events.add(randomArray([600,900,1200]),function(){
-                                //console.log("goni cie intruz");
-                                //console.log(randomArray([600,900,1200]));
-                                intruz.area = false;
-                            },this);
-
-                            // if(intruz.body.blocked.left || intruz.body.blocked.right) {
-                            //     toolsGame.mainElements.intruders.jump(intruz,450);
-                            //     if (timeLoop === 2) {
-                            //         if (intruz.body.blocked.left) intruz.randomMove = 'intruzLeft';
-                            //         else if (intruz.body.blocked.right) intruz.randomMove = 'intruzRight';
-                            //     }
-                            // }
-                        }
-
-                        if(intruz.body.blocked.left || intruz.body.blocked.right) {
-                            toolsGame.mainElements.intruders.jump(intruz,450);
-                            if (timeLoop === 2) {
-                                if (intruz.body.blocked.left) intruz.randomMove = 'intrudersdleLeft';
-                                else if (intruz.body.blocked.right) intruz.randomMove = 'intrudersdleRight';
-                                // game.time.events.add(4000,function(){
-                                //     if(intruz.randomMove === 'intrudersdleLeft') intruz.randomMove = 'intruzLeft';
-                                //     else if (intruz.randomMove === 'intrudersdleRight') intruz.randomMove = 'intruzRight';
-                                // },this);
-                            }
-                        }
-
-                    }
-
-                    if(intruz.type === 5 || intruz.type === 7) {
-                        if(intruz.body.blocked.down) {
-                            //console.log("touch bottom lay");
-                            //console.log(intruz.body.blocked);
-
-                            toolsGame.mainElements.intruders.jump(intruz,350);
-                            if(intruz.type === 5) toolsGame.audio.condor();
-                            if(intruz.type === 7) toolsGame.audio.owl();
-                        }
-                    }
-
-                    if (!(intruz.timeLoop >= 1 && intruz.timeLoop <= 4000 + intruz.break)) {
-                        intruz.timeLoop = 1;
-                    }
-
-
-                } else if(intruz.randomMove==='intrudersdleRight') {
-                    intruz.animations.play('idle-right');
-                } else if(intruz.randomMove==='intrudersdleLeft') {
-                    intruz.animations.play('idle-left');
                 }
-                else if(intruz.randomMove==='intruzDelete'){
-                    intruz.randomMove=parseInt(Math.random() * 2) ?  'intruzRight' : 'intruzLeft';
-                    let wsp=[], wspX=intruz.wspStartX, wspY=intruz.wspStartY;
-                    //console.log(intruz.wspStartY);
-                    //console.log(intruz.wspStartX);
-                    if(wspInkub.length>0)
-                    {
-                        //console.log("wsp inkub istnieje");
-                        const randomWspInk=randomBetween(0,wspInkub.length-1);
-                        //console.log("nr: " + randomWspInk);
-                        //console.log(randomWspInk);
-                        wsp=wspInkub[randomWspInk].split(",");
-                        wspX=parseInt(wsp[0]/tileSize);
-                        wspY=parseInt(wsp[1]/tileSize);
-                        //console.log(wsp[0]/tileSize + "x" + wsp[1]/tileSize);
+
+                if(intruz.type === 6) {
+                    if(!intruz.area) {
+                        if(intruz.position.x < tPlayer.obj.position.x) {
+                            intruz.randomMove = 'intruzLeft';
+                        } else {
+                            intruz.randomMove = 'intruzRight';
+                        }
+                        intruz.area = true;
+                        timeEvents.add(randomArray([600,900,1200]),function(){
+                            intruz.area = false;
+                        },this);
                     }
 
-                    //console.log(wspInkub);
-                    //console.log(wspX + "," + wspY);
+                    if(intruz.body.blocked.left || intruz.body.blocked.right) {
+                        tIntruders.jump(intruz,450);
+                        if (timeLoop === 2) {
+                            if (intruz.body.blocked.left) intruz.randomMove = 'intrudersdleLeft';
+                            else if (intruz.body.blocked.right) intruz.randomMove = 'intrudersdleRight';
+                        }
+                    }
 
-                    // intruz.body.x=wspX;
-                    // intruz.body.y=wspY;
-                    intruz.kill();
-
-                    // setTimeout(function(){
-                    //     toolsGame.mainElements.intruders.add(wspX,wspY,intruz.type);
-                    // }, randomBetween(3,6)*1000);
-
-                    // if we want reactivate intruder:
-                    game.time.events.add(randomBetween(8,16)*1000, function(){
-                        toolsGame.mainElements.intruders.add(wspX,wspY,intruz.type);
-                    }, this);
-
-
-
-                    //intruz.alpha=1;
                 }
-                else if(intruz.randomMove=='intruzStop'){
-                    if(intruz.type === 4 || intruz.type === 5 || intruz.type === 7) {
-                        //intruz.frame = 37;
-                    } else {
-                        intruz.frame = 37;
+
+                if(intruz.type === 5 || intruz.type === 7) {
+                    if(intruz.body.blocked.down) {
+                        tIntruders.jump(intruz,350);
+                        if(intruz.type === 5) audio.condor();
+                        if(intruz.type === 7) audio.owl();
                     }
                 }
+
+                if (!(intruz.timeLoop >= 1 && intruz.timeLoop <= 4000 + intruz.break)) {
+                    intruz.timeLoop = 1;
+                }
+
+
+            } else if(intruz.randomMove==='intrudersdleRight') {
+                intruz.animations.play('idle-right');
+            } else if(intruz.randomMove==='intrudersdleLeft') {
+                intruz.animations.play('idle-left');
             }
-
-
-            //console.log(intruz.randomMove);
-        },null, this);
-
-
-        toolsGame.mainElements.player.obj.body.velocity.x = 0;
-        //console.log(toolsGame.mainElements.player.obj.touchGround + " and " + levelFile.blockedKeys);
-        if(!levelFile.blockedKeys) // zmiana levelu - blokowanie klawiszy
-        {
-
-            // if(toolsGame.mainElements.player.obj.gForceWaterOnlyeOne && (cursors.up.isDown || cursors.left.isDown || cursors.right.isDown)) {
-            //     toolsGame.mainElements.player.obj.gForceWaterOnlyeOne = false;
-            // }
-
-            if (cursors.up.isDown) {
-                // if(toolsGame.mainElements.player.obj.onGround) {
-                //     toolsGame.mainElements.player.obj.onGround=false;
-                // }
-                if (facing === 'right') {
-                    if(!toolsGame.mainElements.player.obj.touchGround) {
-                        toolsGame.mainElements.player.obj.animations.play('jump-right');
-                    }
-                }
-                else if (facing === 'left') {
-                    if(!toolsGame.mainElements.player.obj.touchGround) {
-                        toolsGame.mainElements.player.obj.animations.play('jump-left');
-                    }
+            else if(intruz.randomMove==='intruzDelete'){
+                intruz.randomMove=parseInt(Math.random() * 2) ?  'intruzRight' : 'intruzLeft';
+                let wsp=[], wspX=intruz.wspStartX, wspY=intruz.wspStartY;
+                //console.log(intruz.wspStartY);
+                //console.log(intruz.wspStartX);
+                if(wspInkub.length>0)
+                {
+                    //console.log("wsp inkub istnieje");
+                    const randomWspInk=randomBetween(0,wspInkub.length-1);
+                    //console.log("nr: " + randomWspInk);
+                    //console.log(randomWspInk);
+                    wsp=wspInkub[randomWspInk].split(",");
+                    wspX=parseInt(wsp[0]/tileSize);
+                    wspY=parseInt(wsp[1]/tileSize);
+                    //console.log(wsp[0]/tileSize + "x" + wsp[1]/tileSize);
                 }
 
-
-                // toolsGame.mainElements.player.obj.touchGroundTime = setTimeout(function(){
-                // 	if(!levelFile.blockedKeys) {
-                //         if (facing === 'left') {
-                //             toolsGame.mainElements.player.obj.animations.play('left');
-                //         } else if (facing === 'right') {
-                //             toolsGame.mainElements.player.obj.animations.play('right');
-                //         }
-                //         toolsGame.mainElements.player.obj.touchGround=true;
-                // }
-                // },300);
-
-                toolsGame.mainElements.player.obj.touchGroundTime = game.time.events.add(300, function(){
-                    if(!levelFile.blockedKeys) {
-                        if (facing === 'left') {
-                            toolsGame.mainElements.player.obj.animations.play('left');
-                        } else if (facing === 'right') {
-                            toolsGame.mainElements.player.obj.animations.play('right');
-                        }
-                        toolsGame.mainElements.player.obj.touchGround=true;
-                    }
+                intruz.kill();
+                timeEvents.add(randomBetween(8,16)*1000, function(){
+                    tIntruders.add(wspX,wspY,intruz.type);
                 }, this);
             }
-
-
-
-            if (cursors.left.isDown)
-            {
-
-                toolsGame.mainElements.player.obj.body.velocity.x = -playerSpeedLeftRight;
-                //console.log(game.camera.x);
-                //if() bg.cameraOffset.x+=1;
-
-                if (facing !== 'left')
-                {
-                    toolsGame.mainElements.player.obj.animations.play('left');
-                    facing = 'left';
+            else if(intruz.randomMove === 'intruzStop'){
+                if(!(intruz.type === 4 || intruz.type === 5 || intruz.type === 7)) {
+                    intruz.frame = 37;
                 }
-
-            }
-            else if (cursors.right.isDown)
-            {
-                toolsGame.mainElements.player.obj.body.velocity.x = playerSpeedLeftRight;
-                //console.log(game.camera.x);
-                //bg.cameraOffset.x-=1;
-
-                if (facing !== 'right')
-                {
-                    toolsGame.mainElements.player.obj.animations.play('right');
-                    facing = 'right';
-                }
-            }
-            else {
-                if (facing !== 'idle') {
-                    toolsGame.mainElements.player.obj.animations.stop();
-
-                    if (facing === 'left')
-                    {
-                        //toolsGame.mainElements.player.obj.frame = 0;
-                        toolsGame.mainElements.player.obj.animations.play('idle-left');
-                    }
-                    else
-                    {
-                        //toolsGame.mainElements.player.obj.frame = 4;
-                        toolsGame.mainElements.player.obj.animations.play('idle-right');
-                    }
-
-                    facing = 'idle';
-                }
-            }
-
-        }
-
-        // camera and backing to other part screen
-        //console.log(game.camera.x);
-        // game.camera.follow();
-        // game.camera.x+=10;
-
-        /* aniamacja kladki itp */
-
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.poziom.obj, layer);
-        game.physics.arcade.overlap(toolsGame.mainElements.kladki.poziom.obj, layer, function(kladka,lay){
-
-            kladka.body.velocity.x = 0;
-
-            //if(toolsGame.mainElements.player.detectionHoldOnObject(kladka,.8)) {
-
-                // zkaomentuj jesli chcesz aby kaldki byly na starcie nieruchome
-                if(!kladka.onlyOne) {
-                    kladka.run = true;
-                    kladka.onlyOne= true;
-                }
-
-                //console.log(kladka.run);
-
-                if(kladka.run) {
-                    //toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,kladka);
-
-                    if(kladka.body.blocked.right) {
-                        kladka.direction="left";
-                    }
-                    else if(kladka.body.blocked.left) {
-                        kladka.direction="right";
-                    }
-
-                    if(kladka.direction=="right")
-                    {
-                        kladka.body.velocity.x = 100;
-                    }
-                    else
-                    {
-                        kladka.body.velocity.x = -100;
-                    }
-                }
-
-                if(kladka.body.blocked.left || kladka.body.blocked.right) {
-                    kladka.run = false;
-                    game.time.events.add(1000,function(){
-                        kladka.run = true;
-                    },this);
-                }
-            //}
-
-
-            kladka.isUp=false;
-
-
-        },null, this);
-
-        toolsGame.mainElements.player.obj.body.allowGravity = true;
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.poziom.obj, toolsGame.mainElements.player.obj, function(p,kladka){
-            //console.log(kladka);
-            if(kladka.body.overlapY>0)
-            {
-                if(!kladka.run) {
-                    kladka.run = true;
-                }
-
-                toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj,'kladki-poziom');
-
-                toolsGame.mainElements.player.obj.body.allowGravity = true;
-                toolsGame.mainElements.player.obj.body.bounce.y = 0;
-                kladka.isUp=true;
-                toolsGame.mainElements.player.obj.body.velocity.x += kladka.body.velocity.x;
-
-                toolsGame.mainElements.player.obj.body.allowGravity = false;
-                //console.log(toolsGame.mainElements.player.obj.body.allowGravity);
-
-                game.time.events.remove(toolsGame.mainElements.kladki.kladkaPlayerBounceReset);
-                toolsGame.mainElements.kladki.kladkaPlayerBounceReset=game.time.events.add(200, function(){
-                    toolsGame.mainElements.player.obj.body.bounce.y = 0.3;
-                }, this);
-
-                // clearTimeout(toolsGame.mainElements.kladki.kladkaPlayerBounceReset);
-                // toolsGame.mainElements.kladki.kladkaPlayerBounceReset=setTimeout(function(){
-                // 	toolsGame.mainElements.player.obj.body.bounce.y = 0.3;
-                // },200);
-                //console.log(toolsGame.mainElements.player.obj.body.bounce.y + " / " + toolsGame.mainElements.player.obj.body.overlapY);
-            }
-
-        }, null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.poziom.obj, toolsGame.mainElements.intruders.obj, function(kladka,intruz){
-            //intruz.body.velocity.x += kladka.body.velocity.x;
-        }, null, this);
-
-
-        //console.log(toolsGame.mainElements.player.obj.body.bounce.y + " / " + toolsGame.mainElements.player.obj.body.overlapY);
-        //console.log(toolsGame.mainElements.player.obj.body.blocked.down);
-        /* end aniamacja kladki itp */
-
-
-        //\\ start
-        //game.physics.arcade.collide(toolsGame.mainElements.kladki.pionTopBack.obj, toolsGame.mainElements.blankTileS.obj);
-
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionTopBack.obj, toolsGame.mainElements.kladki.poziom.obj);
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionTopBack.obj, toolsGame.mainElements.intruders.obj,function(k,intruz){
-            //console.log("intruz vs kladka");
-            toolsGame.intruzCollisonNoBack(intruz);
-        });
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionTopBack.obj, toolsGame.mainElements.player.obj, function(k,p){
-            if(p.body.overlapY>0) {
-                //console.log("kladka pion top (auto back)");
-                toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-                toolsGame.mainElements.kladki.run.startCollision(p,"pionTopBack");
-            }
-        }, null, this);
-        game.physics.arcade.overlap(toolsGame.mainElements.kladki.pionTopBack.obj, layer, function(k,lay){
-            toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,k);
-        }, null, this);
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionTopBack.obj, layer, function(k,lay){
-            toolsGame.mainElements.kladki.run.endCollision(k,"pionTopBack");
-        }, null, this);
-
-
-
-
-
-        ////pionBottomBack
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionBottomBack.obj, toolsGame.mainElements.kladki.poziom.obj);
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionBottomBack.obj, toolsGame.mainElements.intruders.obj,function(k,intruz){
-            //console.log("intruz vs kladka");
-            toolsGame.intruzCollisonNoBack(intruz);
-        });
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionBottomBack.obj, toolsGame.mainElements.player.obj, function(k,p){
-            if(p.body.overlapY>0) {
-                //console.log("kladka pion bottom (auto back)");
-                //console.log("test y");
-                toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-                toolsGame.mainElements.kladki.run.startCollision(p,"pionBottomBack");
-            }
-        }, null, this);
-
-        game.physics.arcade.overlap(toolsGame.mainElements.kladki.pionBottomBack.obj, layer, function(k,lay){
-            toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,k);
-        }, null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionBottomBack.obj, layer, function(k,lay){
-            toolsGame.mainElements.kladki.run.endCollision(k,"pionBottomBack");
-            //console.log(lay);
-        }, null, this);
-        ////
-
-
-
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionTop.obj, toolsGame.mainElements.kladki.poziom.obj);
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionTop.obj, toolsGame.mainElements.intruders.obj,function(k,intruz){
-            //console.log("intruz vs kladka");
-            toolsGame.intruzCollisonNoBack(intruz);
-        });
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionTop.obj, toolsGame.mainElements.player.obj, function(k,p){
-            if(p.body.overlapY>0) {
-                //console.log("kladka pion top");
-                toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-                toolsGame.mainElements.kladki.run.startCollision(p,"pionTop");
-            }
-        }, null, this);
-        game.physics.arcade.overlap(toolsGame.mainElements.kladki.pionTop.obj, layer, function(k,lay){
-            toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,k);
-        }, null, this);
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionTop.obj, layer, function(k,lay){
-            toolsGame.mainElements.kladki.run.endCollision(k,"pionTop");
-        }, null, this);
-
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionBottom.obj, toolsGame.mainElements.kladki.poziom.obj);
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionBottom.obj, toolsGame.mainElements.intruders.obj,function(k,intruz){
-            //console.log("intruz vs kladka");
-            toolsGame.intruzCollisonNoBack(intruz);
-        });
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionBottom.obj, toolsGame.mainElements.player.obj, function(k,p){
-            if(p.body.overlapY>0) {
-                //console.log("kladka pion bottom");
-                toolsGame.mainElements.player.checkIfWasKilledAndOther(toolsGame.mainElements.player.obj);
-                toolsGame.mainElements.kladki.run.startCollision(p,"pionBottom");
-            }
-        }, null, this);
-        game.physics.arcade.overlap(toolsGame.mainElements.kladki.pionBottom.obj, layer, function(k,lay){
-            toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,k);
-        }, null, this);
-        game.physics.arcade.collide(toolsGame.mainElements.kladki.pionBottom.obj, layer, function(k,lay){
-            toolsGame.mainElements.kladki.run.endCollision(k,"pionBottom");
-        }, null, this);
-        //\\ end
-
-
-        /* teleporter postaci
-        console.log(toolsGame.mainElements.player.obj.body.x + " : " + toolsGame.mainElements.player.obj.body.y);
-        if(toolsGame.mainElements.player.obj.body.x>1200) {
-            //game.camera.follow(false);
-            //game.camera.follow(toolsGame.mainElements.intruders.obj.children[0]);
-            toolsGame.mainElements.player.obj.body.x=100;
-            toolsGame.mainElements.player.obj.body.y=100;
-            //game.camera.follow(toolsGame.mainElements.player.obj);
-            //game.camera.follow(toolsGame.mainElements.player.obj, Phaser.Camera.FOLLOW_LOCKON, 0.05, 0.05);
-
-        }
-        /* end teleporter postaci */
-
-
-        // shot bullet whit gun
-        toolsGame.mainElements.player.gun.shot(toolsGame.mainElements.player);
-
-        // visual gun
-        toolsGame.mainElements.player.gun.visualGun(toolsGame.mainElements.player);
-
-        // visual fog
-        if(typeof proportiesMap[levelFile.activeIdLevel] === 'object') {
-            if(proportiesMap[levelFile.activeIdLevel].fog && proportiesMap[levelFile.activeIdLevel].fogSpeed)
-            {
-                if(oFog.x>=-2500) oFog.x=-3000;
-                else oFog.x += proportiesMap[levelFile.activeIdLevel].fogSpeed;
-                //console.log(oFog.x);
             }
         }
+    },null, this);
 
-        //console.log(bg.position.x);
 
-        // parallaxa backgroundu
-        if(levelFile.backgroundParallax)
+    tPlayer.obj.body.velocity.x = 0;
+    if(!levelFile.blockedKeys) // zmiana levelu - blokowanie klawiszy
+    {
+        if (cUp.isDown) {
+            if (facing === 'right') {
+                if(!tPlayer.obj.touchGround) {
+                    tPlayer.obj.animations.play('jump-right');
+                }
+            }
+            else if (facing === 'left') {
+                if(!tPlayer.obj.touchGround) {
+                    tPlayer.obj.animations.play('jump-left');
+                }
+            }
+            tPlayer.obj.touchGroundTime = timeEvents.add(300, function(){
+                if(!levelFile.blockedKeys) {
+                    if (facing === 'left') {
+                        tPlayer.obj.animations.play('left');
+                    } else if (facing === 'right') {
+                        tPlayer.obj.animations.play('right');
+                    }
+                    tPlayer.obj.touchGround=true;
+                }
+            }, this);
+        }
+
+        if (cLeft.isDown)
         {
 
-            if(proportiesMap[levelFile.activeIdLevel].background) {
-                let backgroundMoveX = 0;
-                if(proportiesMap[levelFile.activeIdLevel].backgroundMoveX) {
-                    backgroundMoveX = -proportiesMap[levelFile.activeIdLevel].backgroundMoveX;
-                }
-                bg.cameraOffset.x = backgroundMoveX-200-game.camera.x / 15;
-            }
-            if(proportiesMap[levelFile.activeIdLevel].backgroundSecond) {
-                bg2.cameraOffset.x=-game.camera.x/8;
-            }
-        }
-
-        // if (toolsGame.mainElements.player.numberLifes < 1) {
-        //     toolsGame.mainElements.player.obj.animations.play('kill-right');
-        // }
-
-
-        if(toolsGame.mainElements.player.generateAgain && !toolsGame.mainElements.player.gameOver) {
-            toolsGame.mainElements.player.obj.body.x=saveX;
-            toolsGame.mainElements.player.obj.body.y=saveY;
-            toolsGame.mainElements.player.obj.alpha = 1;
-
-            toolsGame.mainElements.player.obj.play("idle-right");
-            toolsGame.mainElements.player.generateAgain = false;
-        }
-
-        //toolsGame.mainElements.intruders.obj.children
-        //(toolsGame.mainElements.intruders.obj.children[0].indexOf("intruzStop") !== -1)
-        //console.log(toolsGame.mainElements.player.obj.body.onFloor());
-        if (
-            jumpButton.isDown &&
-            (toolsGame.mainElements.player.obj.body.onFloor() ||
-                inArrayObject('kladki', toolsGame.mainElements.logs.obj.children,true) ||
-                inArrayObject('kladki',toolsGame.mainElements.kladki.poziom.obj.children,true) ||
-                inArrayObject('kladki',toolsGame.mainElements.kladki.pionTopBack.obj.children,true) ||
-                inArrayObject('kladki',toolsGame.mainElements.kladki.pionBottomBack.obj.children,true) ||
-                inArrayObject('kladki',toolsGame.mainElements.kladki.pionTop.obj.children,true) ||
-                inArrayObject('kladki',toolsGame.mainElements.kladki.pionBottom.obj.children,true) ||
-                toolsGame.mainElements.player.obj.youCanJump
-            ) && game.time.now > toolsGame.mainElements.player.jumpTimer
-        )
-        {
-            if(!levelFile.blockedKeys)
+            tPlayer.obj.body.velocity.x = -playerSpeedLeftRight;
+            if (facing !== 'left')
             {
-                //console.log(toolsGame.mainElements.player.obj.body.onFloor());
-                if(toolsGame.mainElements.player.obj.gForceWater) {
-                    toolsGame.mainElements.player.obj.body.velocity.y = -toolsGame.mainElements.player.velocityWater;
-                    toolsGame.mainElements.player.jumpTimer = game.time.now + toolsGame.mainElements.player.velocityWater;
-                } else if(toolsGame.mainElements.stoneBigS.keepStone) {
-                    toolsGame.mainElements.player.obj.body.velocity.y = -toolsGame.mainElements.player.velocityStone;
-                    toolsGame.mainElements.player.jumpTimer = game.time.now + toolsGame.mainElements.player.velocityStone;
-                } else {
-                    toolsGame.mainElements.player.obj.body.velocity.y = -toolsGame.mainElements.player.velocityNormal;
-                    toolsGame.mainElements.player.jumpTimer = game.time.now + toolsGame.mainElements.player.velocityNormal;
+                tPlayer.obj.animations.play('left');
+                facing = 'left';
+            }
+
+        }
+        else if (cRight.isDown)
+        {
+            tPlayer.obj.body.velocity.x = playerSpeedLeftRight;
+            if (facing !== 'right')
+            {
+                tPlayer.obj.animations.play('right');
+                facing = 'right';
+            }
+        }
+        else {
+            if (facing !== 'idle') {
+                tPlayer.obj.animations.stop();
+
+                if (facing === 'left')
+                {
+                    //tPlayer.obj.frame = 0;
+                    tPlayer.obj.animations.play('idle-left');
+                }
+                else
+                {
+                    //tPlayer.obj.frame = 4;
+                    tPlayer.obj.animations.play('idle-right');
                 }
 
-                if(!toolsGame.mainElements.player.obj.body.bounce.y) {
-                    toolsGame.mainElements.player.obj.body.bounce.y = 0.3;
-                }
+                facing = 'idle';
             }
         }
-
-        if(!toolsGame.mainElements.player.obj.t1) {
-            toolsGame.mainElements.player.obj.onGround=false;
-        }
-
-        game.physics.arcade.overlap(toolsGame.mainElements.player.obj, toolsGame.mainElements.cactusAnimateS.obj, function(p, c){
-            //console.log(p);
-            if(!p.holdLostLife && !levelFile.blockedKeys) {
-                toolsGame.mainElements.player.lostLife(p);
-                toolsGame.jumpCollision(p,250);
-            }
-
-        }, null, this);
-
-        if(!theEndCredits) {
-            // game.time.advancedTiming = true;
-            // toolsGame.text.show(false,
-            //     (toolsGame.windows.boxMenu.obj)?3*tileSize:tileSize,
-            //     (toolsGame.windows.boxMenu.obj)?7*tileSize:5*tileSize,
-            //     1,
-            //     (
-            //         "timeLoop: " + timeLoop + "\n" +
-            //         "level " + levelFile.activeIdLevel + "\n" +
-            //         'Timer: ' + timerTotal + "\n" +
-            //         '\u2764 Main Lifes x ' + toolsGame.mainElements.player.numberMainLifes + "\n" +
-            //         '\u2661 Life x ' +  toolsGame.mainElements.player.numberLifes + "\n" +
-            //         'Current gold record: ' + ((toolsGame.mainElements.player.numberCoinsLevelProcentLastMemory>toolsGame.mainElements.player.numberCoinsLevelProcent)?toolsGame.mainElements.player.numberCoinsLevelProcentLastMemory + '%':'-') + "\n" +
-            //         'Golds: ' +  toolsGame.mainElements.player.numberCoins + ' (' + toolsGame.mainElements.player.numberCoinsLevelProcent + '%)' + "\n" +
-            //         '\u204D bullets: ' + toolsGame.mainElements.player.countBullets + "\n" +
-            //         '\u26BF keys: ' + keys + "\n" +
-            //         "FPS: " + game.time.fps
-            //     ),
-            //     '700 12px Arial' ,'#ded4b8',true,'infogame',true
-            // );
-
-            toolsGame.windows.boxTopMenu.letAlways.show();
-            if(!toolsGame.windows.boxTopMenu.f) {
-                toolsGame.windows.boxTopMenu.let.show();
-                toolsGame.windows.boxTopMenu.f=true;
-            }
-
-        }
-
-        //+ timer.duration.toFixed(0)
 
     }
 
+    /* aniamacja kladki itp */
 
-};
+    arcade.collide(tMain.kladki.poziom.obj, curLayer);
+    arcade.overlap(tMain.kladki.poziom.obj, curLayer, function(kladka){
+
+        kladka.body.velocity.x = 0;
+
+        // zkaomentuj jesli chcesz aby kaldki byly na starcie nieruchome
+        if(!kladka.onlyOne) {
+            kladka.run = true;
+            kladka.onlyOne= true;
+        }
+
+        if(kladka.run) {
+            //toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,kladka);
+
+            if(kladka.body.blocked.right) {
+                kladka.direction="left";
+            }
+            else if(kladka.body.blocked.left) {
+                kladka.direction="right";
+            }
+
+            if(kladka.direction === "right")
+            {
+                kladka.body.velocity.x = 100;
+            }
+            else
+            {
+                kladka.body.velocity.x = -100;
+            }
+        }
+
+        if(kladka.body.blocked.left || kladka.body.blocked.right) {
+            kladka.run = false;
+            timeEvents.add(1000,function(){
+                kladka.run = true;
+            },this);
+        }
+        kladka.isUp=false;
+    },null, this);
+
+    tPlayer.obj.body.allowGravity = true;
+    arcade.collide(tMain.kladki.poziom.obj, tPlayer.obj, function(p,kladka){
+        //console.log(kladka);
+        if(kladka.body.overlapY>0)
+        {
+            if(!kladka.run) {
+                kladka.run = true;
+            }
+
+            tPlayer.checkIfWasKilledAndOther(tPlayer.obj,'kladki-poziom');
+
+            tPlayer.obj.body.allowGravity = true;
+            tPlayer.obj.body.bounce.y = 0;
+            kladka.isUp=true;
+            tPlayer.obj.body.velocity.x += kladka.body.velocity.x;
+
+            tPlayer.obj.body.allowGravity = false;
+            //console.log(tPlayer.obj.body.allowGravity);
+
+            timeEvents.remove(tMain.kladki.kladkaPlayerBounceReset);
+            tMain.kladki.kladkaPlayerBounceReset=timeEvents.add(200, function(){
+                tPlayer.obj.body.bounce.y = 0.3;
+            }, this);
+        }
+
+    }, null, this);
+
+    arcade.collide(tMain.kladki.poziom.obj, tIntruders.obj, function(kladka,intruz){
+        //intruz.body.velocity.x += kladka.body.velocity.x;
+    }, null, this);
+    /* end aniamacja kladki itp */
+
+    //\\ start
+    //arcade.collide(tMain.kladki.pionTopBack.obj, tMain.blankTileS.obj);
+
+    arcade.collide(tMain.kladki.pionTopBack.obj, tMain.kladki.poziom.obj);
+    arcade.collide(tMain.kladki.pionTopBack.obj, tIntruders.obj,function(k,intruz){
+        //console.log("intruz vs kladka");
+        toolsGame.intruzCollisonNoBack(intruz);
+    });
+    arcade.collide(tMain.kladki.pionTopBack.obj, tPlayer.obj, function(k,p){
+        if(p.body.overlapY>0) {
+            //console.log("kladka pion top (auto back)");
+            tPlayer.checkIfWasKilledAndOther(tPlayer.obj);
+            tMain.kladki.run.startCollision(p,"pionTopBack");
+        }
+    }, null, this);
+    arcade.overlap(tMain.kladki.pionTopBack.obj, curLayer, function(k,lay){
+        toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,k);
+    }, null, this);
+    arcade.collide(tMain.kladki.pionTopBack.obj, curLayer, function(k){
+        tMain.kladki.run.endCollision(k,"pionTopBack");
+    }, null, this);
+
+    arcade.collide(tMain.kladki.pionBottomBack.obj, tMain.kladki.poziom.obj);
+    arcade.collide(tMain.kladki.pionBottomBack.obj, tIntruders.obj,function(k,intruz){
+        //console.log("intruz vs kladka");
+        toolsGame.intruzCollisonNoBack(intruz);
+    });
+    arcade.collide(tMain.kladki.pionBottomBack.obj, tPlayer.obj, function(k,p){
+        if(p.body.overlapY>0) {
+            //console.log("kladka pion bottom (auto back)");
+            //console.log("test y");
+            tPlayer.checkIfWasKilledAndOther(tPlayer.obj);
+            tMain.kladki.run.startCollision(p,"pionBottomBack");
+        }
+    }, null, this);
+
+    arcade.overlap(tMain.kladki.pionBottomBack.obj, curLayer, function(k,lay){
+        toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,k);
+    }, null, this);
+
+    arcade.collide(tMain.kladki.pionBottomBack.obj, curLayer, function(k){
+        tMain.kladki.run.endCollision(k,"pionBottomBack");
+    }, null, this);
+
+    arcade.collide(tMain.kladki.pionTop.obj, tMain.kladki.poziom.obj);
+    arcade.collide(tMain.kladki.pionTop.obj, tIntruders.obj,function(k,intruz){
+        //console.log("intruz vs kladka");
+        toolsGame.intruzCollisonNoBack(intruz);
+    });
+    arcade.collide(tMain.kladki.pionTop.obj, tPlayer.obj, function(k,p){
+        if(p.body.overlapY>0) {
+            //console.log("kladka pion top");
+            tPlayer.checkIfWasKilledAndOther(tPlayer.obj);
+            tMain.kladki.run.startCollision(p,"pionTop");
+        }
+    }, null, this);
+    arcade.overlap(tMain.kladki.pionTop.obj, curLayer, function(k,lay){
+        toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,k);
+    }, null, this);
+    arcade.collide(tMain.kladki.pionTop.obj, curLayer, function(k){
+        tMain.kladki.run.endCollision(k,"pionTop");
+    }, null, this);
+
+    arcade.collide(tMain.kladki.pionBottom.obj, tMain.kladki.poziom.obj);
+    arcade.collide(tMain.kladki.pionBottom.obj, tIntruders.obj,function(k,intruz){
+        //console.log("intruz vs kladka");
+        toolsGame.intruzCollisonNoBack(intruz);
+    });
+    arcade.collide(tMain.kladki.pionBottom.obj, tPlayer.obj, function(k,p){
+        if(p.body.overlapY>0) {
+            //console.log("kladka pion bottom");
+            tPlayer.checkIfWasKilledAndOther(tPlayer.obj);
+            tMain.kladki.run.startCollision(p,"pionBottom");
+        }
+    }, null, this);
+    arcade.overlap(tMain.kladki.pionBottom.obj, curLayer, function(k,lay){
+        toolsGame.checkSpecialBlankBlockElementAndElevatorSound(lay,k);
+    }, null, this);
+    arcade.collide(tMain.kladki.pionBottom.obj, curLayer, function(k){
+        tMain.kladki.run.endCollision(k,"pionBottom");
+    }, null, this);
+    //\\ end
+
+    // shot bullet whit gun
+    tGun.shot(tPlayer);
+
+    // visual gun
+    tGun.visualGun(tPlayer);
+
+    // visual fog
+    if(typeof proportiesMap[levelFile.activeIdLevel] === 'object') {
+        if(proportiesMap[levelFile.activeIdLevel].fog && proportiesMap[levelFile.activeIdLevel].fogSpeed)
+        {
+            if(oFog.x>=-2500) oFog.x=-3000;
+            else oFog.x += proportiesMap[levelFile.activeIdLevel].fogSpeed;
+            //console.log(oFog.x);
+        }
+    }
+    // parallaxa backgroundu
+    if(levelFile.backgroundParallax)
+    {
+
+        if(proportiesMap[levelFile.activeIdLevel].background) {
+            let backgroundMoveX = 0;
+            if(proportiesMap[levelFile.activeIdLevel].backgroundMoveX) {
+                backgroundMoveX = -proportiesMap[levelFile.activeIdLevel].backgroundMoveX;
+            }
+            bg.cameraOffset.x = backgroundMoveX-200-game.camera.x / 15;
+        }
+        if(proportiesMap[levelFile.activeIdLevel].backgroundSecond) {
+            bg2.cameraOffset.x=-game.camera.x/8;
+        }
+    }
+
+
+    if(tPlayer.generateAgain && !tPlayer.gameOver) {
+        tPlayer.obj.body.x=saveX;
+        tPlayer.obj.body.y=saveY;
+        tPlayer.obj.alpha = 1;
+        tPlayer.obj.play("idle-right");
+        tPlayer.generateAgain = false;
+    }
+
+    if (
+        jumpButton.isDown &&
+        (tPlayer.obj.body.onFloor() ||
+            inArrayObject('kladki', tLogs.obj.children,true) ||
+            inArrayObject('kladki',tMain.kladki.poziom.obj.children,true) ||
+            inArrayObject('kladki',tMain.kladki.pionTopBack.obj.children,true) ||
+            inArrayObject('kladki',tMain.kladki.pionBottomBack.obj.children,true) ||
+            inArrayObject('kladki',tMain.kladki.pionTop.obj.children,true) ||
+            inArrayObject('kladki',tMain.kladki.pionBottom.obj.children,true) ||
+            tPlayer.obj.youCanJump
+        ) && game.time.now > tPlayer.jumpTimer
+    )
+    {
+        if(!levelFile.blockedKeys)
+        {
+            //console.log(tPlayer.obj.body.onFloor());
+            if(tPlayer.obj.gForceWater) {
+                tPlayer.obj.body.velocity.y = -tPlayer.velocityWater;
+                tPlayer.jumpTimer = game.time.now + tPlayer.velocityWater;
+            } else if(tStoneBigS.keepStone) {
+                tPlayer.obj.body.velocity.y = -tPlayer.velocityStone;
+                tPlayer.jumpTimer = game.time.now + tPlayer.velocityStone;
+            } else {
+                tPlayer.obj.body.velocity.y = -tPlayer.velocityNormal;
+                tPlayer.jumpTimer = game.time.now + tPlayer.velocityNormal;
+            }
+
+            if(!tPlayer.obj.body.bounce.y) {
+                tPlayer.obj.body.bounce.y = 0.3;
+            }
+        }
+    }
+
+    if(!tPlayer.obj.t1) {
+        tPlayer.obj.onGround=false;
+    }
+
+    arcade.overlap(tPlayer.obj, tCactusAnimateS.obj, function(p){
+        //console.log(p);
+        if(!p.holdLostLife && !levelFile.blockedKeys) {
+            tPlayer.lostLife(p);
+            toolsGame.jumpCollision(p,250);
+        }
+
+    }, null, this);
+
+    if(!theEndCredits) {
+        tWindows.boxTopMenu.letAlways.show();
+        if(!tWindows.boxTopMenu.f) {
+            tWindows.boxTopMenu.let.show();
+            tWindows.boxTopMenu.f=true;
+        }
+    }
+} ;
 
 const correctCookiesProcent = () => {
     console.log("########### Correct procent #############");
@@ -6779,21 +5849,8 @@ const endGame = () => {
         toolsGame.mainElements.player.gameOver = false;
         create();
     }
-    else
-    {
-        //navigator.app.exitApp();
-    }
 };
 
-const render = () => {
-    //game.debug.text(game.time.physicsElapsed, 32, 32);
-    //game.debug.bodyInfo(toolsGame.mainElements.player.obj, 16, 24);
-    //if(toolsGame.mainElements.intruders.obj.children[0]) game.debug.body(toolsGame.mainElements.intruders.obj.children[0]);
-    //if(toolsGame.mainElements.intruders.obj.children[0]) game.debug.bodyInfo(toolsGame.mainElements.intruders.obj.children[0], 16, 24);
-    //console.log("x-game.load.onLoadStart");
-};
-
-// new Game(width, height, renderer, parent, state, transparent, antialias, physicsConfig)
 const config = {
     width: 800, // 800
     height: 450, // 450
@@ -6812,37 +5869,6 @@ const config = {
         preload: preload,
         create: create,
         update: update
-        //render: render
     }
 };
 const game = new Phaser.Game(config);
-//const game = new Phaser.ScaleManager(game, 1600, 900);
-//game.scale.refresh();
-
-// setTimeout(function (){
-//     alert("x2");
-//     game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
-//     game.scale.pageAlignHorizontally = true;
-//     game.scale.parentIsWindow = true;
-//     game.scale.forceLandscape = true;
-//     game.scale.pageAlignVertically = true;
-//     game.scale.refresh();
-// },5000);
-
-
-//const game = new Phaser.Game(800, 450, Phaser.CANVAS, 'game-content', { preload: preload, create: create, update: update, render: render });
-
-//alert(navigator.userAgent);
-
-// window.addEventListener('blur', function(){
-//     //toolsGame.windows.boxMenu.show();
-//     if(playGame.main) {
-//         alert("x");
-//     }
-// });
-// window.addEventListener('focus', function(){
-//     //toolsGame.windows.boxMenu.show();
-//     if(playGame.main) {
-//
-//     }
-// });
